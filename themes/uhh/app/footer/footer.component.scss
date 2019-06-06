@@ -1,0 +1,36 @@
+$footer-bg: $dark;
+$footer-border: none;
+$footer-padding: $spacer * 3;
+$footer-logo-height: 55px;
+
+.footer {
+  background-color: $footer-bg;
+  border-top: $footer-border;
+  text-align: center;
+  padding: $footer-padding;
+
+  &, a {
+    color: white;
+  }
+
+  p {
+    margin: 0;
+  }
+  img {
+    height: $footer-logo-height;
+  }
+}
+
+.pre-footer {
+  background: $blue;
+  padding: $footer-padding;
+
+    a {
+    color: white;
+    font-size: $font-size-sm;
+    font-weight: bold;
+    line-height: 2;
+    text-transform: uppercase;
+  }
+}
+
