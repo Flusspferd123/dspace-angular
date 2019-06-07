@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { DynamicFormLayoutService, DynamicFormService, DynamicFormValidationService } from '@ng-dynamic-forms/core';
+import { ENV_CONFIG, GLOBAL_CONFIG, GlobalConfig } from '../../config';
 
 import { coreEffects } from './core.effects';
 import { coreReducers } from './core.reducers';
@@ -29,6 +30,12 @@ import { FormService } from '../shared/form/form.service';
 import { GroupEpersonService } from './eperson/group-eperson.service';
 import { HostWindowService } from '../shared/host-window.service';
 import { ItemDataService } from './data/item-data.service';
+import { EndpointMockingRestService } from './dspace-rest-v2/endpoint-mocking-rest.service';
+import {
+  MOCK_RESPONSE_MAP,
+  MockResponseMap,
+  mockResponseMap
+} from './dspace-rest-v2/mocks/mock-response-map';
 import { MetadataService } from './metadata/metadata.service';
 import { ObjectCacheService } from './cache/object-cache.service';
 import { PaginationComponentOptions } from '../shared/pagination/pagination-component-options.model';
@@ -54,7 +61,7 @@ import { UUIDService } from './shared/uuid.service';
 import { AuthenticatedGuard } from './auth/authenticated.guard';
 import { AuthRequestService } from './auth/auth-request.service';
 import { AuthResponseParsingService } from './auth/auth-response-parsing.service';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { HALEndpointService } from './shared/hal-endpoint.service';
 import { FacetValueResponseParsingService } from './data/facet-value-response-parsing.service';
@@ -88,6 +95,14 @@ import { ClaimedTaskDataService } from './tasks/claimed-task-data.service';
 import { PoolTaskDataService } from './tasks/pool-task-data.service';
 import { TaskResponseParsingService } from './tasks/task-response-parsing.service';
 
+export const restServiceFactory = (cfg: GlobalConfig, mocks: MockResponseMap, http: HttpClient) => {
+  if (ENV_CONFIG.production) {
+    return new DSpaceRESTv2Service(http);
+  } else {
+    return new EndpointMockingRestService(cfg, mocks, http);
+  }
+};
+
 const IMPORTS = [
   CommonModule,
   StoreModule.forFeature('core', coreReducers, {}),
@@ -110,7 +125,12 @@ const PROVIDERS = [
   CommunityDataService,
   CollectionDataService,
   DSOResponseParsingService,
-  DSpaceRESTv2Service,
+  { provide: MOCK_RESPONSE_MAP, useValue: mockResponseMap },
+  {
+    provide: DSpaceRESTv2Service,
+    useFactory: restServiceFactory,
+    deps: [GLOBAL_CONFIG, MOCK_RESPONSE_MAP, HttpClient]
+  },
   DynamicFormLayoutService,
   DynamicFormService,
   DynamicFormValidationService,
