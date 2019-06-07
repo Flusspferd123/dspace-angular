@@ -17,6 +17,7 @@ import { FileSectionComponent } from './simple/field-components/file-section/fil
 import { CollectionsComponent } from './field-components/collections/collections.component';
 import { FullItemPageComponent } from './full/full-item-page.component';
 import { FullFileSectionComponent } from './full/field-components/file-section/full-file-section.component';
+import { DataFileComponent } from './simple/item-types/data-file/data-file.component';
 import { DataPackageComponent } from './simple/item-types/data-package/data-package.component';
 import { RelatedItemsComponent } from './simple/related-items/related-items-component';
 import { SearchPageModule } from '../+search-page/search-page.module';
@@ -55,7 +56,8 @@ import { MetadataFieldWrapperComponent } from './field-components/metadata-field
     GenericItemPageFieldComponent,
     MetadataRepresentationListComponent,
     RelatedEntitiesSearchComponent,
-    DataPackageComponent
+    DataPackageComponent,
+    DataFileComponent
   ],
   exports: [
     ItemComponent,
@@ -68,7 +70,8 @@ import { MetadataFieldWrapperComponent } from './field-components/metadata-field
   ],
   entryComponents: [
     PublicationComponent,
-    DataPackageComponent
+    DataPackageComponent,
+    DataFileComponent
   ]
 })
 export class ItemPageModule {
