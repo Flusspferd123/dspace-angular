@@ -68,6 +68,8 @@ import { DsDynamicFormArrayComponent } from './models/array-group/dynamic-form-a
 import { DsDynamicRelationGroupComponent } from './models/relation-group/dynamic-relation-group.components';
 import { DYNAMIC_FORM_CONTROL_TYPE_RELATION_GROUP } from './models/relation-group/dynamic-relation-group.model';
 import { DsDatePickerInlineComponent } from './models/date-picker-inline/dynamic-date-picker-inline.component';
+import {DYNAMIC_FORM_CONTROL_TYPE_GUS} from './models/gus/gus.model';
+import {GusComponent} from './models/gus/gus.component';
 
 export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<DynamicFormControl> | null {
   switch (model.type) {
@@ -109,6 +111,9 @@ export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<
 
     case DYNAMIC_FORM_CONTROL_TYPE_SCROLLABLE_DROPDOWN:
       return DsDynamicScrollableDropdownComponent;
+
+    case DYNAMIC_FORM_CONTROL_TYPE_GUS:
+      return GusComponent;
 
     case DYNAMIC_FORM_CONTROL_TYPE_TAG:
       return DsDynamicTagComponent;

@@ -12,6 +12,7 @@ import { NameFieldParser } from './name-field-parser';
 import { SeriesFieldParser } from './series-field-parser';
 import { TagFieldParser } from './tag-field-parser';
 import { TextareaFieldParser } from './textarea-field-parser';
+import {GusFieldParser} from './gus-field-parser';
 
 export class ParserFactory {
   public static getConstructor(type: ParserType): GenericConstructor<FieldParser> {
@@ -21,6 +22,9 @@ export class ParserFactory {
       }
       case ParserType.Dropdown: {
         return DropdownFieldParser
+      }
+      case ParserType.Gus:{
+        return GusFieldParser
       }
       case ParserType.RelationGroup: {
         return RelationGroupFieldParser
