@@ -1,22 +1,23 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {FormGroup} from '@angular/forms';
 
-import { Observable, of as observableOf } from 'rxjs';
-import { catchError, first, tap } from 'rxjs/operators';
-import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+import {Observable, of, of as observableOf} from 'rxjs';
+import {catchError, first, tap} from 'rxjs/operators';
+import {NgbDropdown} from '@ng-bootstrap/ng-bootstrap';
 import {
   DynamicFormControlComponent,
   DynamicFormLayoutService,
   DynamicFormValidationService
 } from '@ng-dynamic-forms/core';
 
-import { AuthorityValue } from '../../../../../../core/integration/models/authority.value';
-import { PageInfo } from '../../../../../../core/shared/page-info.model';
-import { isNull, isUndefined } from '../../../../../empty.util';
-import { AuthorityService } from '../../../../../../core/integration/authority.service';
-import { IntegrationSearchOptions } from '../../../../../../core/integration/models/integration-options.model';
-import { IntegrationData } from '../../../../../../core/integration/integration-data';
+import {AuthorityValue} from '../../../../../../core/integration/models/authority.value';
+import {PageInfo} from '../../../../../../core/shared/page-info.model';
+import {isNull, isUndefined} from '../../../../../empty.util';
+import {AuthorityService} from '../../../../../../core/integration/authority.service';
+import {IntegrationSearchOptions} from '../../../../../../core/integration/models/integration-options.model';
+import {IntegrationData} from '../../../../../../core/integration/integration-data';
 import {GusModel} from './gus.model';
+import {PanelData} from './gus.authority.models';
 
 @Component({
   selector: 'ds-dynamic-gus',
@@ -36,6 +37,7 @@ export class GusComponent extends DynamicFormControlComponent implements OnInit 
   public loading = false;
   public pageInfo: PageInfo;
   public optionsList: any;
+  public panelData: PanelData[];
 
   protected searchOptions: IntegrationSearchOptions;
 
@@ -48,6 +50,7 @@ export class GusComponent extends DynamicFormControlComponent implements OnInit 
   }
 
   ngOnInit() {
+    this.panelData = new Array<PanelData>();
     this.searchOptions = new IntegrationSearchOptions(
       this.model.authorityOptions.scope,
       this.model.authorityOptions.name,
@@ -66,6 +69,29 @@ export class GusComponent extends DynamicFormControlComponent implements OnInit 
       first())
       .subscribe((object: IntegrationData) => {
         this.optionsList = object.payload;
+
+        for (const option  of this.optionsList) {
+          const currAuthority: AuthorityValue = option as AuthorityValue;
+          const panelData: PanelData = new PanelData();
+          if ((currAuthority.display.match(new RegExp('::', 'g')) || []).length === 1) {
+            const parts: string[] = currAuthority.display.split('::');
+            const panelTitle: string = parts[1];
+            panelData.panelTitle = panelTitle;
+            // console.log('panelTitle: ', panelTitle);
+            const panelItemNames: string[] = new Array<string>();
+            for (const option1 of this.optionsList) {
+              console.log('option1: ', option1);
+              if (option1.display.includes(panelTitle + '::')) {
+                panelItemNames.push(option1.display.split('::')[2])
+              }
+            }
+            panelData.panelItemNames = panelItemNames;
+            this.panelData.push(panelData);
+            console.log('this.panelData: ', this.panelData)
+          }
+
+        }
+
         if (this.model.value) {
           this.setCurrentValue(this.model.value);
         }

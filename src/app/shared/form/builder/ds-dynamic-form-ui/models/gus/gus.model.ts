@@ -21,7 +21,7 @@ export class GusModel extends DsDynamicInputModel {
 
     this.autoComplete = AUTOCOMPLETE_OFF;
     this.authorityOptions = config.authorityOptions;
-    this.maxOptions = config.maxOptions || 10;
+    this.maxOptions = config.maxOptions || 100;
   }
 
 }
