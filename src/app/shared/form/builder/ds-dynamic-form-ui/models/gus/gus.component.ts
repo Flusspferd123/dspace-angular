@@ -17,7 +17,7 @@ import {AuthorityService} from '../../../../../../core/integration/authority.ser
 import {IntegrationSearchOptions} from '../../../../../../core/integration/models/integration-options.model';
 import {IntegrationData} from '../../../../../../core/integration/integration-data';
 import {GusModel} from './gus.model';
-import {PanelData} from './gus.authority.models';
+import {PanelData} from './gus.panelData.models';
 
 @Component({
   selector: 'ds-dynamic-gus',

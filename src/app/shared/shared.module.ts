@@ -139,6 +139,7 @@ import { UserMenuComponent } from './auth-nav-menu/user-menu/user-menu.component
 import { ClaimedTaskActionsReturnToPoolComponent } from './mydspace-actions/claimed-task/return-to-pool/claimed-task-actions-return-to-pool.component';
 import { ItemDetailPreviewFieldComponent } from './object-detail/my-dspace-result-detail-element/item-detail-preview/item-detail-preview-field/item-detail-preview-field.component';
 import {GusComponent} from './form/builder/ds-dynamic-form-ui/models/gus/gus.component';
+import {GusItemComponent} from './form/builder/ds-dynamic-form-ui/models/gus/gusItem/gus-item.component';
 
 const MODULES = [
   // Do NOT include UniversalModule, HttpModule, or JsonpModule here
@@ -259,7 +260,8 @@ const COMPONENTS = [
   ItemSearchResultListElementComponent,
   TypedItemSearchResultListElementComponent,
   ItemTypeSwitcherComponent,
-  BrowseByComponent
+  BrowseByComponent,
+  GusItemComponent
 ];
 
 const ENTRY_COMPONENTS = [

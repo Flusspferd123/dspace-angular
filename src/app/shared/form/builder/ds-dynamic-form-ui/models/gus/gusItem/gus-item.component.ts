@@ -1,17 +1,17 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { isEmpty } from '../empty.util';
+import { isEmpty } from '../../../../../../empty.util';
 
 @Component({
-  selector: 'ds-number-picker',
-  styleUrls: ['./number-picker.component.scss'],
-  templateUrl: './number-picker.component.html',
+  selector: 'ds-gus-item',
+  styleUrls: ['./gus-item.component.scss'],
+  templateUrl: './gus-item.component.html',
   providers: [
-    {provide: NG_VALUE_ACCESSOR, useExisting: NumberPickerComponent, multi: true}
+    {provide: NG_VALUE_ACCESSOR, useExisting: GusItemComponent, multi: true}
   ],
 })
 
-export class NumberPickerComponent implements OnInit, ControlValueAccessor {
+export class GusItemComponent implements OnInit, ControlValueAccessor {
 
   @Input() step: number;
   @Input() min: number;
