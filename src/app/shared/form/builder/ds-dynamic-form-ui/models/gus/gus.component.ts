@@ -102,6 +102,10 @@ export class GusComponent extends DynamicFormControlComponent implements OnInit 
 
   inputFormatter = (x: AuthorityValue): string => x.display || x.value;
 
+  onChange($event: any): void {
+    console.log('onChange() emitted: ', $event)
+  }
+
   openDropdown(sdRef: NgbDropdown) {
     if (!this.model.readOnly) {
       sdRef.open();

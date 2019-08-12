@@ -27,6 +27,7 @@ import { SubmissionSectionUploadFileEditComponent } from './sections/upload/file
 import { SubmissionSectionUploadFileViewComponent } from './sections/upload/file/view/section-upload-file-view.component';
 import { SubmissionSectionUploadAccessConditionsComponent } from './sections/upload/accessConditions/submission-section-upload-access-conditions.component';
 import { SubmissionSubmitComponent } from './submit/submission-submit.component';
+import {SubmissionSectionGusComponent} from './sections/gus/section-gus.component';
 
 @NgModule({
   imports: [
@@ -41,6 +42,7 @@ import { SubmissionSubmitComponent } from './submit/submission-submit.component'
     SubmissionSectionUploadAccessConditionsComponent,
     SubmissionSectionUploadComponent,
     SubmissionSectionformComponent,
+    SubmissionSectionGusComponent,
     SubmissionSectionLicenseComponent,
     SectionsDirective,
     SubmissionSectionContainerComponent,
@@ -58,6 +60,7 @@ import { SubmissionSubmitComponent } from './submit/submission-submit.component'
   entryComponents: [
     SubmissionSectionUploadComponent,
     SubmissionSectionformComponent,
+    SubmissionSectionGusComponent,
     SubmissionSectionLicenseComponent,
     SubmissionSectionContainerComponent],
   exports: [

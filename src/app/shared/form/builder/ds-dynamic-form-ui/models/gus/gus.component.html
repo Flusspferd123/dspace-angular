@@ -1,4 +1,5 @@
-<ngb-accordion #acc="ngbAccordion">
+<ngb-accordion #acc="ngbAccordion"
+               (panelChange)="onChange($event)">
 <div *ngFor="let item of panelData">
   <ngb-panel  title={{item.panelTitle}}>
 

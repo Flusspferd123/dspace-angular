@@ -117,6 +117,7 @@ import { MetadatafieldParsingService } from './data/metadatafield-parsing.servic
 import { NormalizedSubmissionUploadsModel } from './config/models/normalized-config-submission-uploads.model';
 import { NormalizedBrowseEntry } from './shared/normalized-browse-entry.model';
 import { BrowseDefinition } from './shared/browse-definition.model';
+import {SectionGusOperationsService} from '../submission/sections/gus/section-gus-operations.service';
 
 const IMPORTS = [
   CommonModule,
@@ -142,6 +143,7 @@ const PROVIDERS = [
   DynamicFormValidationService,
   FormBuilderService,
   SectionFormOperationsService,
+  SectionGusOperationsService,
   FormService,
   EpersonResponseParsingService,
   GroupEpersonService,
