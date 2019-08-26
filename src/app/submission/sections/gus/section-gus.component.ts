@@ -1,33 +1,50 @@
-import { ChangeDetectorRef, Component, Inject, ViewChild } from '@angular/core';
-import { DynamicFormControlEvent, DynamicFormControlModel } from '@ng-dynamic-forms/core';
+import {ChangeDetectorRef, Component, Inject, ViewChild} from '@angular/core';
+import {
+  DynamicCheckboxModel,
+  DynamicDatePickerModel,
+  DynamicFormControlEvent,
+  DynamicFormControlModel,
+  DynamicFormLayout, DynamicFormLayoutService,
+  DynamicFormModel, DynamicFormValidationService, DynamicInputModel, DynamicRadioGroupModel
+} from '@ng-dynamic-forms/core';
 
-import { Observable, Subscription } from 'rxjs';
-import { distinctUntilChanged, filter, find, flatMap, map, take, tap } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
-import { isEqual } from 'lodash';
+import {Observable, of as observableOf, Subscription} from 'rxjs';
+import {catchError, distinctUntilChanged, filter, find, first, flatMap, map, take, tap} from 'rxjs/operators';
+import {TranslateService} from '@ngx-translate/core';
+import {isEqual} from 'lodash';
 
-import { FormBuilderService } from '../../../shared/form/builder/form-builder.service';
-import { FormComponent } from '../../../shared/form/form.component';
-import { FormService } from '../../../shared/form/form.service';
-import { SectionModelComponent } from '../models/section.model';
-import { SubmissionFormsConfigService } from '../../../core/config/submission-forms-config.service';
-import { hasValue, isNotEmpty, isUndefined } from '../../../shared/empty.util';
-import { ConfigData } from '../../../core/config/config-data';
-import { JsonPatchOperationPathCombiner } from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
-import { SubmissionFormsModel } from '../../../core/config/models/config-submission-forms.model';
-import { SubmissionSectionError, SubmissionSectionObject } from '../../objects/submission-objects.reducer';
-import { FormFieldPreviousValueObject } from '../../../shared/form/builder/models/form-field-previous-value-object';
-import { GLOBAL_CONFIG } from '../../../../config';
-import { GlobalConfig } from '../../../../config/global-config.interface';
-import { SectionDataObject } from '../models/section-data.model';
-import { renderSectionFor } from '../sections-decorator';
-import { SectionsType } from '../sections-type';
-import { SubmissionService } from '../../submission.service';
-import { SectionGusOperationsService } from './section-gus-operations.service';
-import { NotificationsService } from '../../../shared/notifications/notifications.service';
-import { SectionsService } from '../sections.service';
-import { difference } from '../../../shared/object.util';
-import { WorkspaceitemSectionFormObject } from '../../../core/submission/models/workspaceitem-section-form.model';
+import {FormBuilderService} from '../../../shared/form/builder/form-builder.service';
+import {FormComponent} from '../../../shared/form/form.component';
+import {FormService} from '../../../shared/form/form.service';
+import {SectionModelComponent} from '../models/section.model';
+import {SubmissionFormsConfigService} from '../../../core/config/submission-forms-config.service';
+import {hasValue, isNotEmpty, isUndefined} from '../../../shared/empty.util';
+import {ConfigData} from '../../../core/config/config-data';
+import {JsonPatchOperationPathCombiner} from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
+import {SubmissionFormsModel} from '../../../core/config/models/config-submission-forms.model';
+import {SubmissionSectionError, SubmissionSectionObject} from '../../objects/submission-objects.reducer';
+import {FormFieldPreviousValueObject} from '../../../shared/form/builder/models/form-field-previous-value-object';
+import {GLOBAL_CONFIG} from '../../../../config';
+import {GlobalConfig} from '../../../../config/global-config.interface';
+import {SectionDataObject} from '../models/section-data.model';
+import {renderSectionFor} from '../sections-decorator';
+import {SectionsType} from '../sections-type';
+import {SubmissionService} from '../../submission.service';
+import {SectionGusOperationsService} from './section-gus-operations.service';
+import {NotificationsService} from '../../../shared/notifications/notifications.service';
+import {SectionsService} from '../sections.service';
+import {difference} from '../../../shared/object.util';
+import {WorkspaceitemSectionFormObject} from '../../../core/submission/models/workspaceitem-section-form.model';
+import {SECTION_LICENSE_FORM_LAYOUT, SECTION_LICENSE_FORM_MODEL} from '../license/section-license.model';
+import {SECTION_GUS_FORM_LAYOUT, SECTION_GUS_FORM_MODEL} from './section-gus.model';
+import {AuthorityService} from '../../../core/integration/authority.service';
+import {IntegrationData} from '../../../core/integration/integration-data';
+import {PageInfo} from '../../../core/shared/page-info.model';
+import {AuthorityValue} from '../../../core/integration/models/authority.value';
+import {PanelData} from '../../../shared/form/builder/ds-dynamic-form-ui/models/gus/gus.panelData.models';
+import {IntegrationSearchOptions} from '../../../core/integration/models/integration-options.model';
+import {NgbAccordion, NgbAccordionConfig} from '@ng-bootstrap/ng-bootstrap';
+
 
 /**
  * This component represents a section that contains a Form.
@@ -100,6 +117,18 @@ export class SubmissionSectionGusComponent extends SectionModelComponent {
   @ViewChild('formRef') private formRef: FormComponent;
 
   /**
+   * The [[DynamicFormLayout]] object
+   * @type {DynamicFormLayout}
+   */
+  public formLayout: DynamicFormLayout = SECTION_GUS_FORM_LAYOUT;
+
+  protected searchOptions: IntegrationSearchOptions;
+
+  public optionsList: any;
+
+  public panelData: PanelData[];
+
+  /**
    * Initialize instance variables
    *
    * @param {ChangeDetectorRef} cdr
@@ -125,6 +154,7 @@ export class SubmissionSectionGusComponent extends SectionModelComponent {
               protected sectionService: SectionsService,
               protected submissionService: SubmissionService,
               protected translate: TranslateService,
+              private authorityService: AuthorityService,
               @Inject(GLOBAL_CONFIG) protected EnvConfig: GlobalConfig,
               @Inject('collectionIdProvider') public injectedCollectionId: string,
               @Inject('sectionDataProvider') public injectedSectionData: SectionDataObject,
@@ -136,25 +166,67 @@ export class SubmissionSectionGusComponent extends SectionModelComponent {
    * Initialize all instance variables and retrieve form configuration
    */
   onSectionInit() {
+    this.panelData = new Array<PanelData>();
     this.pathCombiner = new JsonPatchOperationPathCombiner('sections', this.sectionData.id);
     this.formId = this.formService.getUniqueId(this.sectionData.id);
 
-    this.formConfigService.getConfigByHref(this.sectionData.config).pipe(
-      map((configData: ConfigData) => configData.payload),
-      tap((config: SubmissionFormsModel) => this.formConfig = config),
-      flatMap(() => this.sectionService.getSectionData(this.submissionId, this.sectionData.id)),
-      take(1))
-      .subscribe((sectionData: WorkspaceitemSectionFormObject) => {
-        if (isUndefined(this.formModel)) {
-          this.sectionData.errors = [];
-          // Is the first loading so init form
-          this.initForm(sectionData);
-          this.sectionData.data = sectionData;
-          this.subscriptions();
-          this.isLoading = false;
-          this.cdr.detectChanges();
+    this.isLoading = false;
+
+    this.searchOptions = new IntegrationSearchOptions(
+      // this.model.authorityOptions.scope
+      this.collectionId,
+      // this.model.authorityOptions.name
+      'gus',
+      // this.model.authorityOptions.metadata
+      'dc.subject',
+      '',
+      // this.model.maxOptions
+      100,
+      1
+    );
+
+    this.authorityService.getEntriesByName(this.searchOptions).pipe(
+      catchError(() => {
+        const emptyResult = new IntegrationData(
+          new PageInfo(),
+          []
+        );
+        return observableOf(emptyResult);
+      }),
+      first())
+      .subscribe((object: IntegrationData) => {
+          console.log('IntegrationData: ', IntegrationData)
+          this.optionsList = object.payload;
+
+          for (const option  of this.optionsList) {
+            console.log('option: ', option);
+          }
+
+          for (const option  of this.optionsList) {
+            const currAuthority: AuthorityValue = option as AuthorityValue;
+            const panelData: PanelData = new PanelData();
+            if ((currAuthority.display.match(new RegExp('::', 'g')) || []).length === 1) {
+              const parts: string[] = currAuthority.display.split('::');
+              const panelTitle: string = parts[1];
+              panelData.panelTitle = panelTitle;
+              // console.log('panelTitle: ', panelTitle);
+              const panelItemNames: string[] = new Array<string>();
+              for (const option1 of this.optionsList) {
+                // console.log('option1: ', option1);
+                if (option1.display.includes(panelTitle + '::')) {
+                  panelItemNames.push(option1.display.split('::')[2])
+                }
+              }
+              panelData.panelItemNames = panelItemNames;
+              this.panelData.push(panelData);
+              console.log('this.panelData: ', this.panelData)
+            }
+
+          }
+
         }
-      })
+      )
+
   }
 
   /**
@@ -238,7 +310,7 @@ export class SubmissionSectionGusComponent extends SectionModelComponent {
       if (this.hasMetadataEnrichment(sectionData)) {
         const msg = this.translate.instant(
           'submission.sections.general.metadata-extracted',
-          { sectionId: this.sectionData.id });
+          {sectionId: this.sectionData.id});
         this.notificationsService.info(null, msg, null, true);
         this.isUpdating = true;
         this.formModel = null;

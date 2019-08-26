@@ -1,10 +1,26 @@
-import { AUTOCOMPLETE_OFF, DynamicFormControlLayout, serializable } from '@ng-dynamic-forms/core';
+import {
+  AUTOCOMPLETE_OFF,
+  DynamicFormControlLayout,
+  DynamicInputModelConfig,
+  serializable
+} from '@ng-dynamic-forms/core';
 import { DsDynamicInputModel, DsDynamicInputModelConfig } from '../ds-dynamic-input.model';
 import { AuthorityOptions } from '../../../../../../core/integration/models/authority-options.model';
 
 export const DYNAMIC_FORM_CONTROL_TYPE_GUS = 'GUS_TYPE';
 
-export interface GusModelConfig extends DsDynamicInputModelConfig {
+export const GUS_FORM_LAYOUT = {
+
+  granted: {
+    element: {
+      container: 'custom-control custom-checkbox pl-1',
+      control: 'custom-control-input',
+      label: 'custom-control-label pt-1'
+    }
+  }
+};
+
+export interface GusModelConfig extends DynamicInputModelConfig {
   authorityOptions: AuthorityOptions;
   maxOptions?: number;
   value?: any;

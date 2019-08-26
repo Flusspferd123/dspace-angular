@@ -1,11 +1,10 @@
 import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 
 import {Observable, of, of as observableOf} from 'rxjs';
 import {catchError, first, tap} from 'rxjs/operators';
-import {NgbDropdown} from '@ng-bootstrap/ng-bootstrap';
 import {
-  DynamicFormControlComponent,
+  DynamicFormControlComponent, DynamicFormControlEvent, DynamicFormControlModel,
   DynamicFormLayoutService,
   DynamicFormValidationService
 } from '@ng-dynamic-forms/core';
@@ -16,18 +15,20 @@ import {isNull, isUndefined} from '../../../../../empty.util';
 import {AuthorityService} from '../../../../../../core/integration/authority.service';
 import {IntegrationSearchOptions} from '../../../../../../core/integration/models/integration-options.model';
 import {IntegrationData} from '../../../../../../core/integration/integration-data';
-import {GusModel} from './gus.model';
+import {GUS_FORM_LAYOUT, GusModel} from './gus.model';
 import {PanelData} from './gus.panelData.models';
 
 @Component({
-  selector: 'ds-dynamic-gus',
-  styleUrls: ['./gus.component.scss'],
-  templateUrl: './gus.component.html'
+  selector: 'ds-dynamic-gus-container',
+  styleUrls: ['./gus.container.component.scss'],
+  templateUrl: './gus.container.component.html'
 })
-export class GusComponent extends DynamicFormControlComponent implements OnInit {
+export class GusContainerComponent extends DynamicFormControlComponent implements OnInit {
   @Input() bindId = true;
-  @Input() group: FormGroup;
+  @Input() formGroup: FormGroup;
   @Input() model: GusModel;
+  @Input() formId: string;
+  @Input() formModel: DynamicFormControlModel[];
 
   @Output() blur: EventEmitter<any> = new EventEmitter<any>();
   @Output() change: EventEmitter<any> = new EventEmitter<any>();
@@ -38,6 +39,8 @@ export class GusComponent extends DynamicFormControlComponent implements OnInit 
   public pageInfo: PageInfo;
   public optionsList: any;
   public panelData: PanelData[];
+
+  public formLayout = GUS_FORM_LAYOUT;
 
   protected searchOptions: IntegrationSearchOptions;
 
@@ -80,14 +83,13 @@ export class GusComponent extends DynamicFormControlComponent implements OnInit 
             // console.log('panelTitle: ', panelTitle);
             const panelItemNames: string[] = new Array<string>();
             for (const option1 of this.optionsList) {
-              console.log('option1: ', option1);
+              // console.log('option1: ', option1);
               if (option1.display.includes(panelTitle + '::')) {
                 panelItemNames.push(option1.display.split('::')[2])
               }
             }
             panelData.panelItemNames = panelItemNames;
             this.panelData.push(panelData);
-            console.log('this.panelData: ', this.panelData)
           }
 
         }
@@ -98,39 +100,13 @@ export class GusComponent extends DynamicFormControlComponent implements OnInit 
         this.pageInfo = object.pageInfo;
         this.cdr.detectChanges();
       })
+
   }
 
   inputFormatter = (x: AuthorityValue): string => x.display || x.value;
 
   onChange($event: any): void {
     console.log('onChange() emitted: ', $event)
-  }
-
-  openDropdown(sdRef: NgbDropdown) {
-    if (!this.model.readOnly) {
-      sdRef.open();
-    }
-  }
-
-  onScroll() {
-    if (!this.loading && this.pageInfo.currentPage <= this.pageInfo.totalPages) {
-      this.loading = true;
-      this.searchOptions.currentPage++;
-      this.authorityService.getEntriesByName(this.searchOptions).pipe(
-        catchError(() => {
-          const emptyResult = new IntegrationData(
-            new PageInfo(),
-            []
-          );
-          return observableOf(emptyResult);
-        }),
-        tap(() => this.loading = false))
-        .subscribe((object: IntegrationData) => {
-          this.optionsList = this.optionsList.concat(object.payload);
-          this.pageInfo = object.pageInfo;
-          this.cdr.detectChanges();
-        })
-    }
   }
 
   onBlur(event: Event) {
@@ -148,14 +124,6 @@ export class GusComponent extends DynamicFormControlComponent implements OnInit 
     this.setCurrentValue(event);
   }
 
-  onToggle(sdRef: NgbDropdown) {
-    if (sdRef.isOpen()) {
-      this.focus.emit(event);
-    } else {
-      this.blur.emit(event);
-    }
-  }
-
   setCurrentValue(value): void {
     let result: string;
     if (isUndefined(value) || isNull(value)) {
@@ -171,5 +139,9 @@ export class GusComponent extends DynamicFormControlComponent implements OnInit 
       }
     }
     this.currentValue = observableOf(result);
+  }
+
+  onEvent($event: DynamicFormControlEvent, type: string) {
+    console.log('some event in GUS: ', $event)
   }
 }

@@ -138,8 +138,9 @@ import { RoleDirective } from './roles/role.directive';
 import { UserMenuComponent } from './auth-nav-menu/user-menu/user-menu.component';
 import { ClaimedTaskActionsReturnToPoolComponent } from './mydspace-actions/claimed-task/return-to-pool/claimed-task-actions-return-to-pool.component';
 import { ItemDetailPreviewFieldComponent } from './object-detail/my-dspace-result-detail-element/item-detail-preview/item-detail-preview-field/item-detail-preview-field.component';
-import {GusComponent} from './form/builder/ds-dynamic-form-ui/models/gus/gus.component';
+import {GusContainerComponent} from './form/builder/ds-dynamic-form-ui/models/gus/gus.container.component';
 import {GusItemComponent} from './form/builder/ds-dynamic-form-ui/models/gus/gusItem/gus-item.component';
+import {GusAccordionComponent} from './form/builder/ds-dynamic-form-ui/models/gus/GusAccordion/gus-accordion.component';
 
 const MODULES = [
   // Do NOT include UniversalModule, HttpModule, or JsonpModule here
@@ -201,7 +202,8 @@ const COMPONENTS = [
   DsDynamicListComponent,
   DsDynamicLookupComponent,
   DsDynamicScrollableDropdownComponent,
-  GusComponent,
+  GusContainerComponent,
+  GusAccordionComponent,
   DsDynamicTagComponent,
   DsDynamicTypeaheadComponent,
   DsDynamicRelationGroupComponent,
@@ -284,7 +286,7 @@ const ENTRY_COMPONENTS = [
   SearchResultGridElementComponent,
   DsDynamicListComponent,
   DsDynamicLookupComponent,
-  GusComponent,
+  GusContainerComponent,
   DsDynamicScrollableDropdownComponent,
   DsDynamicTagComponent,
   DsDynamicTypeaheadComponent,

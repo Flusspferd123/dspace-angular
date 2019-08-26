@@ -603,7 +603,7 @@
   "submission.sections.submit.progressbar.detect-duplicate": "Potential duplicates",
   "submission.sections.submit.progressbar.license": "Deposit license",
   "submission.sections.submit.progressbar.upload": "Upload files",
-  "submission.sections.submit.progressbar.GUS": "Gesamtuniversitäre Schwerpunkte",
+  "submission.sections.submit.progressbar.describe.gus": "Gesamtuniversitäre Schwerpunkte",
   "submission.sections.upload.delete.confirm.cancel": "Cancel",
   "submission.sections.upload.delete.confirm.info": "This operation can't be undone. Are you sure?",
   "submission.sections.upload.delete.confirm.submit": "Yes, I'm sure",
