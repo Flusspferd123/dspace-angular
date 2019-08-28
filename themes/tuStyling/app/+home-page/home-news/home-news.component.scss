@@ -1,0 +1,77 @@
+
+
+:host {
+    display: block;
+    margin-top: -$content-spacing;
+    margin-bottom: -$content-spacing;
+}
+
+.display-3 {
+    word-break: break-word;
+}
+
+.dspace-logo {
+    height: 110px;
+    width: 110px;
+}
+
+.text-area {
+  div {
+    color: #20c997;
+  }
+  img {
+    border: 10px solid black;
+  }
+  li {
+    color: #e83e8c;
+  }
+  h1 {
+    color: #2B4E72;
+  }
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+}
+
+.dropdown:hover {
+  .dropdown-content {
+    display: block;
+  }
+}
+
+.dropdown-content {
+  a {
+    color: black;
+    display: block;
+    background-color: #ec9433;
+  }
+
+  a:hover {
+    background-color: white;
+    color: #ec9433;
+  }
+}
+
+.dropbtn {
+  background-color: #20c997;
+  color: white;
+  border: none;
+}
+
+.input[type=text] {
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.myInput {
+  input {
+    width: 100%;
+  }
+}

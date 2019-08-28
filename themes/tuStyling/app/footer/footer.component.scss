@@ -1,0 +1,38 @@
+$footer-bg: $gray-100;
+$footer-border: none;
+$footer-padding: $spacer * 1.5;
+$footer-logo-height: 55px;
+
+.footer {
+  background-color: $dark;
+  border-top: $footer-border;
+  text-align: center;
+  padding: $footer-padding*2;
+
+  p {
+    margin: 0;
+    color: yellow;
+  }
+  img {
+    height: $footer-logo-height;
+  }
+  &, a {
+    color: teal;
+  }
+
+}
+
+.pre-footer {
+  background: $green;
+  padding: $footer-padding;
+
+  a {
+    color: $yellow;
+    font-style: italic;
+    text-transform: uppercase;
+    font-size: $font-size-sm;
+    line-height: 2;
+    text-shadow: 3px 2px black;
+    text-decoration: underline;
+  }
+}

@@ -183,5 +183,6 @@ module.exports = {
   },
   theme: {
     name: 'default',
+    // name: 'tuStyling',
   }
 };
