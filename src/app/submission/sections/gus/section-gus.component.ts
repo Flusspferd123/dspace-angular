@@ -44,7 +44,7 @@ import {AuthorityValue} from '../../../core/integration/models/authority.value';
 import {PanelData} from '../../../shared/form/builder/ds-dynamic-form-ui/models/gus/gus.panelData.models';
 import {IntegrationSearchOptions} from '../../../core/integration/models/integration-options.model';
 import {NgbAccordion, NgbAccordionConfig} from '@ng-bootstrap/ng-bootstrap';
-
+import {SectionFormOperationsService} from '../form/section-form-operations.service';
 
 /**
  * This component represents a section that contains a Form.
@@ -147,7 +147,7 @@ export class SubmissionSectionGusComponent extends SectionModelComponent {
    */
   constructor(protected cdr: ChangeDetectorRef,
               protected formBuilderService: FormBuilderService,
-              protected formOperationsService: SectionGusOperationsService,
+              protected formOperationsService: SectionFormOperationsService,
               protected formService: FormService,
               protected formConfigService: SubmissionFormsConfigService,
               protected notificationsService: NotificationsService,
@@ -166,11 +166,35 @@ export class SubmissionSectionGusComponent extends SectionModelComponent {
    * Initialize all instance variables and retrieve form configuration
    */
   onSectionInit() {
+    this.pathCombiner = new JsonPatchOperationPathCombiner('sections', this.sectionData.id);
+    this.formId = this.formService.getUniqueId(this.sectionData.id);
+
+    // this is were the error gets thrown
+    // why do i have to hardcode this
+    this.sectionData.config = 'http://localhost:8080/server/api/config/submissionforms/gus';
+    this.formConfigService.getConfigByHref(this.sectionData.config).pipe(
+      map((configData: ConfigData) => configData.payload),
+      tap((config: SubmissionFormsModel) => this.formConfig = config),
+      flatMap(() => this.sectionService.getSectionData(this.submissionId, this.sectionData.id)),
+      take(1))
+      .subscribe((sectionData: WorkspaceitemSectionFormObject) => {
+        if (isUndefined(this.formModel)) {
+          this.sectionData.errors = [];
+          // Is the first loading so init form
+          this.initForm(sectionData);
+          this.sectionData.data = sectionData;
+          this.subscriptions();
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        }
+      })
+
+    // retrieve GUS authority values
     this.panelData = new Array<PanelData>();
     this.pathCombiner = new JsonPatchOperationPathCombiner('sections', this.sectionData.id);
     this.formId = this.formService.getUniqueId(this.sectionData.id);
 
-    this.isLoading = false;
+    // this.isLoading = false;
 
     this.searchOptions = new IntegrationSearchOptions(
       // this.model.authorityOptions.scope

@@ -1,4 +1,13 @@
-<ngb-accordion #acc="ngbAccordion"
+<ds-loading *ngIf="isLoading" message="Loading..."></ds-loading>
+<ds-form *ngIf="!isLoading && formModel" #formRef="formComponent"
+         [formId]="formId"
+         [formModel]="formModel"
+         [displaySubmit]="false"
+         (dfChange)="onChange($event)"
+         (dfFocus)="onFocus($event)"
+         (remove)="onRemove($event)"
+         (removeArrayItem)="onRemove($event)"></ds-form>
+<!--<ngb-accordion #acc="ngbAccordion"
                (panelChange)="onChange($event)">
   <div *ngFor="let item of panelData">
     <ngb-panel  title={{item.panelTitle}}>
@@ -16,7 +25,7 @@
     </ngb-panel>
   </div>
 
-</ngb-accordion>
+</ngb-accordion>-->
 
 
 
