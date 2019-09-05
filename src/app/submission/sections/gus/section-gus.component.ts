@@ -170,7 +170,7 @@ export class SubmissionSectionGusComponent extends SectionModelComponent {
     this.formId = this.formService.getUniqueId(this.sectionData.id);
 
     // this is were the error gets thrown
-    // why do i have to hardcode this
+    // why do i have to hardcode this ?
     this.sectionData.config = 'http://localhost:8080/server/api/config/submissionforms/gus';
     this.formConfigService.getConfigByHref(this.sectionData.config).pipe(
       map((configData: ConfigData) => configData.payload),
