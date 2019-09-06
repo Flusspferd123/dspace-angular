@@ -13,6 +13,7 @@ import { SeriesFieldParser } from './series-field-parser';
 import { TagFieldParser } from './tag-field-parser';
 import { TextareaFieldParser } from './textarea-field-parser';
 import {GusFieldParser} from './gus-field-parser';
+import { Gus2FieldParser } from './gus2-field-parser';
 
 export class ParserFactory {
   public static getConstructor(type: ParserType): GenericConstructor<FieldParser> {
@@ -26,7 +27,10 @@ export class ParserFactory {
       case ParserType.Gus:{
         return GusFieldParser
       }
-      case ParserType.RelationGroup: {
+      case ParserType.Gus2:{
+        return Gus2FieldParser
+      }
+            case ParserType.RelationGroup: {
         return RelationGroupFieldParser
       }
       case ParserType.List: {

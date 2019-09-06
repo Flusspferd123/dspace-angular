@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Inject, ViewChild} from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, ViewChild } from '@angular/core';
 import {
   DynamicCheckboxModel,
   DynamicDatePickerModel,
@@ -8,43 +8,48 @@ import {
   DynamicFormModel, DynamicFormValidationService, DynamicInputModel, DynamicRadioGroupModel
 } from '@ng-dynamic-forms/core';
 
-import {Observable, of as observableOf, Subscription} from 'rxjs';
-import {catchError, distinctUntilChanged, filter, find, first, flatMap, map, take, tap} from 'rxjs/operators';
-import {TranslateService} from '@ngx-translate/core';
-import {isEqual} from 'lodash';
+import { Observable, of as observableOf, Subscription } from 'rxjs';
+import { catchError, distinctUntilChanged, filter, find, first, flatMap, map, take, tap } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
+import { isEqual } from 'lodash';
 
-import {FormBuilderService} from '../../../shared/form/builder/form-builder.service';
-import {FormComponent} from '../../../shared/form/form.component';
-import {FormService} from '../../../shared/form/form.service';
-import {SectionModelComponent} from '../models/section.model';
-import {SubmissionFormsConfigService} from '../../../core/config/submission-forms-config.service';
-import {hasValue, isNotEmpty, isUndefined} from '../../../shared/empty.util';
-import {ConfigData} from '../../../core/config/config-data';
-import {JsonPatchOperationPathCombiner} from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
-import {SubmissionFormsModel} from '../../../core/config/models/config-submission-forms.model';
-import {SubmissionSectionError, SubmissionSectionObject} from '../../objects/submission-objects.reducer';
-import {FormFieldPreviousValueObject} from '../../../shared/form/builder/models/form-field-previous-value-object';
-import {GLOBAL_CONFIG} from '../../../../config';
-import {GlobalConfig} from '../../../../config/global-config.interface';
-import {SectionDataObject} from '../models/section-data.model';
-import {renderSectionFor} from '../sections-decorator';
-import {SectionsType} from '../sections-type';
-import {SubmissionService} from '../../submission.service';
-import {SectionGusOperationsService} from './section-gus-operations.service';
-import {NotificationsService} from '../../../shared/notifications/notifications.service';
-import {SectionsService} from '../sections.service';
-import {difference} from '../../../shared/object.util';
-import {WorkspaceitemSectionFormObject} from '../../../core/submission/models/workspaceitem-section-form.model';
-import {SECTION_LICENSE_FORM_LAYOUT, SECTION_LICENSE_FORM_MODEL} from '../license/section-license.model';
-import {SECTION_GUS_FORM_LAYOUT, SECTION_GUS_FORM_MODEL} from './section-gus.model';
-import {AuthorityService} from '../../../core/integration/authority.service';
-import {IntegrationData} from '../../../core/integration/integration-data';
-import {PageInfo} from '../../../core/shared/page-info.model';
-import {AuthorityValue} from '../../../core/integration/models/authority.value';
-import {PanelData} from '../../../shared/form/builder/ds-dynamic-form-ui/models/gus/gus.panelData.models';
-import {IntegrationSearchOptions} from '../../../core/integration/models/integration-options.model';
-import {NgbAccordion, NgbAccordionConfig} from '@ng-bootstrap/ng-bootstrap';
-import {SectionFormOperationsService} from '../form/section-form-operations.service';
+import { FormBuilderService } from '../../../shared/form/builder/form-builder.service';
+import { FormComponent } from '../../../shared/form/form.component';
+import { FormService } from '../../../shared/form/form.service';
+import { SectionModelComponent } from '../models/section.model';
+import { SubmissionFormsConfigService } from '../../../core/config/submission-forms-config.service';
+import { hasValue, isNotEmpty, isUndefined } from '../../../shared/empty.util';
+import { ConfigData } from '../../../core/config/config-data';
+import { JsonPatchOperationPathCombiner } from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
+import { SubmissionFormsModel } from '../../../core/config/models/config-submission-forms.model';
+import { SubmissionSectionError, SubmissionSectionObject } from '../../objects/submission-objects.reducer';
+import { FormFieldPreviousValueObject } from '../../../shared/form/builder/models/form-field-previous-value-object';
+import { GLOBAL_CONFIG } from '../../../../config';
+import { GlobalConfig } from '../../../../config/global-config.interface';
+import { SectionDataObject } from '../models/section-data.model';
+import { renderSectionFor } from '../sections-decorator';
+import { SectionsType } from '../sections-type';
+import { SubmissionService } from '../../submission.service';
+import { SectionGusOperationsService } from './section-gus-operations.service';
+import { NotificationsService } from '../../../shared/notifications/notifications.service';
+import { SectionsService } from '../sections.service';
+import { difference } from '../../../shared/object.util';
+import { WorkspaceitemSectionFormObject } from '../../../core/submission/models/workspaceitem-section-form.model';
+import { SECTION_LICENSE_FORM_LAYOUT, SECTION_LICENSE_FORM_MODEL } from '../license/section-license.model';
+import { SECTION_GUS_FORM_LAYOUT, SECTION_GUS_FORM_MODEL } from './section-gus.model';
+import { AuthorityService } from '../../../core/integration/authority.service';
+import { IntegrationData } from '../../../core/integration/integration-data';
+import { PageInfo } from '../../../core/shared/page-info.model';
+import { AuthorityValue } from '../../../core/integration/models/authority.value';
+import { PanelData } from '../../../shared/form/builder/ds-dynamic-form-ui/models/gus/gus.panelData.models';
+import { IntegrationSearchOptions } from '../../../core/integration/models/integration-options.model';
+import { NgbAccordion, NgbAccordionConfig } from '@ng-bootstrap/ng-bootstrap';
+import { SectionFormOperationsService } from '../form/section-form-operations.service';
+import { FormRowModel, SubmissionFormModel } from '../../../core/config/models/config-submission-form.model';
+import { FormFieldModel } from '../../../shared/form/builder/models/form-field.model';
+import { NormalizedSubmissionFormModel } from '../../../core/config/models/normalized-config-submission-form.model';
+import { GusFormRowModel } from './Models/GusFormRowModel';
+import { FormFieldMetadataValueObject } from '../../../shared/form/builder/models/form-field-metadata-value.model';
 
 /**
  * This component represents a section that contains a Form.
@@ -169,33 +174,8 @@ export class SubmissionSectionGusComponent extends SectionModelComponent {
     this.pathCombiner = new JsonPatchOperationPathCombiner('sections', this.sectionData.id);
     this.formId = this.formService.getUniqueId(this.sectionData.id);
 
-    // this is were the error gets thrown
-    // why do i have to hardcode this ?
-    this.sectionData.config = 'http://localhost:8080/server/api/config/submissionforms/gus';
-    this.formConfigService.getConfigByHref(this.sectionData.config).pipe(
-      map((configData: ConfigData) => configData.payload),
-      tap((config: SubmissionFormsModel) => this.formConfig = config),
-      flatMap(() => this.sectionService.getSectionData(this.submissionId, this.sectionData.id)),
-      take(1))
-      .subscribe((sectionData: WorkspaceitemSectionFormObject) => {
-        if (isUndefined(this.formModel)) {
-          this.sectionData.errors = [];
-          // Is the first loading so init form
-          this.initForm(sectionData);
-          this.sectionData.data = sectionData;
-          this.subscriptions();
-          this.isLoading = false;
-          this.cdr.detectChanges();
-        }
-      })
-
     // retrieve GUS authority values
     this.panelData = new Array<PanelData>();
-    this.pathCombiner = new JsonPatchOperationPathCombiner('sections', this.sectionData.id);
-    this.formId = this.formService.getUniqueId(this.sectionData.id);
-
-    // this.isLoading = false;
-
     this.searchOptions = new IntegrationSearchOptions(
       // this.model.authorityOptions.scope
       this.collectionId,
@@ -249,7 +229,28 @@ export class SubmissionSectionGusComponent extends SectionModelComponent {
           }
 
         }
-      )
+      );
+
+    // this is were the error gets thrown
+    // why do i have to hardcode this ?
+    this.sectionData.config = 'http://localhost:8080/server/api/config/submissionforms/gus';
+
+    this.formConfigService.getConfigByHref(this.sectionData.config).pipe(
+      map((configData: ConfigData) => configData.payload),
+      tap((config: SubmissionFormsModel) => this.formConfig = config),
+      flatMap(() => this.sectionService.getSectionData(this.submissionId, this.sectionData.id)),
+      take(1))
+      .subscribe((sectionData: WorkspaceitemSectionFormObject) => {
+        if (isUndefined(this.formModel)) {
+          this.sectionData.errors = [];
+          // Is the first loading so init form
+          this.initForm(sectionData);
+          this.sectionData.data = sectionData;
+          this.subscriptions();
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        }
+      })
 
   }
 
@@ -303,6 +304,43 @@ export class SubmissionSectionGusComponent extends SectionModelComponent {
    *    the section data retrieved from the server
    */
   initForm(sectionData: WorkspaceitemSectionFormObject): void {
+    // this.formModel = this.formBuilderService.fromJSON(SECTION_GUS_FORM_MODEL);
+
+    const testformConfig = new SubmissionFormModel();
+    testformConfig.name = 'gus';
+    testformConfig.self = 'http://localhost:8080/server/api/config/submissionforms/gus';
+    testformConfig._links = {
+      self: 'http://localhost:8080/server/api/config/submissionforms/gus'
+    };
+
+    const formRowModel = new Array<GusFormRowModel>();
+
+    const gusFormRowModel = new GusFormRowModel();
+
+    const formFieldModel = new FormFieldModel();
+    formFieldModel.input = {type: 'gus2'};
+    formFieldModel.label = 'MyLabel';
+    formFieldModel.mandatory = 'true';
+    formFieldModel.mandatoryMessage = 'you must enter a value';
+    formFieldModel.hints = 'My super duper hint';
+
+
+    let metaDataValueObjects = new Array<FormFieldMetadataValueObject>();
+
+    let formFieldMetadataValueObject = new FormFieldMetadataValueObject();
+    formFieldMetadataValueObject.metadata = 'dc.title';
+    metaDataValueObjects.push(formFieldMetadataValueObject);
+
+    formFieldModel.selectableMetadata = metaDataValueObjects;
+
+    gusFormRowModel.fields = new Array<FormFieldModel>();
+    gusFormRowModel.fields.push(formFieldModel);
+
+    formRowModel.push(gusFormRowModel);
+    testformConfig.rows = formRowModel;
+
+    this.formConfig = testformConfig;
+
     try {
       this.formModel = this.formBuilderService.modelFromConfiguration(
         this.formConfig,

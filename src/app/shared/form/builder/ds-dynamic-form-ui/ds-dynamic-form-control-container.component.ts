@@ -70,6 +70,8 @@ import { DYNAMIC_FORM_CONTROL_TYPE_RELATION_GROUP } from './models/relation-grou
 import { DsDatePickerInlineComponent } from './models/date-picker-inline/dynamic-date-picker-inline.component';
 import {DYNAMIC_FORM_CONTROL_TYPE_GUS} from './models/gus/gus.model';
 import {GusContainerComponent} from './models/gus/gus.container.component';
+import { DYNAMIC_FORM_CONTROL_TYPE_GUS2 } from './models/gus/Gus2/gus2.model';
+import { Gus2Component } from './models/gus/Gus2/gus2.component';
 
 export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<DynamicFormControl> | null {
   switch (model.type) {
@@ -114,6 +116,9 @@ export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<
 
     case DYNAMIC_FORM_CONTROL_TYPE_GUS:
       return GusContainerComponent;
+
+    case DYNAMIC_FORM_CONTROL_TYPE_GUS2:
+      return Gus2Component;
 
     case DYNAMIC_FORM_CONTROL_TYPE_TAG:
       return DsDynamicTagComponent;

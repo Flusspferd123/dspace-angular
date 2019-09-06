@@ -7,8 +7,9 @@ import {
 import { isNotEmpty } from '../../../empty.util';
 import { FormFieldMetadataValueObject } from '../models/form-field-metadata-value.model';
 import { GusModel } from '../ds-dynamic-form-ui/models/gus/gus.model';
+import { Gus2Model } from '../ds-dynamic-form-ui/models/gus/Gus2/gus2.model';
 
-export class GusFieldParser extends FieldParser {
+export class Gus2FieldParser extends FieldParser {
 
   public modelFactory(fieldValue?: FormFieldMetadataValueObject | any, label?: boolean): any {
     const dropdownModelConfig: DynamicScrollableDropdownModelConfig = this.initModel(null, label);
@@ -28,7 +29,7 @@ export class GusFieldParser extends FieldParser {
           host: 'col'
         }
       };
-      const gusModel = new GusModel(dropdownModelConfig, layout);
+      const gusModel = new Gus2Model(dropdownModelConfig, layout);
       return gusModel;
     } else {
       throw  Error(`Gus-field-parser error. Please check form configuration file.`);

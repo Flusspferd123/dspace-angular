@@ -10,5 +10,6 @@ export enum ParserType {
   Series = 'series',
   Tag = 'tag',
   Textarea = 'textarea',
-  Gus = 'gus'
+  Gus = 'gus',
+  Gus2 = 'gus2'
 }
