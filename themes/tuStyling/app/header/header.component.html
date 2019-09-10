@@ -1,20 +1,57 @@
-<header>
-    <div class="container">
-        <a class="navbar-brand my-2" routerLink="/home">
-            <img src="assets/images/dspace-logo.svg"/>
-        </a>
+<!--<header class="header-container">-->
+<!--    <div class="container">-->
 
-        <nav class="navbar navbar-light navbar-expand-md float-right px-0">
-            <a routerLink="/search" class="px-1"><i class="fas fa-search fa-lg fa-fw" [title]="'nav.search' | translate"></i></a>
-            <ds-lang-switch></ds-lang-switch>
-            <ds-auth-nav-menu></ds-auth-nav-menu>
-            <div class="pl-2">
-                <button class="navbar-toggler" type="button" (click)="toggleNavbar()"
-                        aria-controls="collapsingNav"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon fas fa-bars fa-fw" aria-hidden="true"></span>
-                </button>
-            </div>
-        </nav>
-    </div>
-</header>
+
+<!--        <nav class="navbar navbar-expand-md float-left px-0">-->
+<!--            <a routerLink="/search" class="px-1"><i class="fas fa-search fa-lg fa-fw" [title]="'nav.search' | translate"></i></a>-->
+<!--          <ds-auth-nav-menu></ds-auth-nav-menu>-->
+<!--          <ds-lang-switch></ds-lang-switch>-->
+<!--            <div class="pl-2">-->
+<!--                <button class="navbar-toggler" type="button" (click)="toggleNavbar()"-->
+<!--                        aria-controls="collapsingNav"-->
+<!--                        aria-expanded="false" aria-label="Toggle navigation">-->
+<!--                    <span class="navbar-toggler-icon fas fa-bars fa-fw" aria-hidden="true"></span>-->
+<!--                </button>-->
+<!--            </div>-->
+<!--        </nav>-->
+
+<!--      <a class="navbar-brand float-xxl-right" routerLink="/home">-->
+<!--        <img src="assets/images/TU_Wien-Logo.svg"/>-->
+<!--      </a>-->
+<!--    </div>-->
+<!--</header>-->
+
+
+
+<nav class="navbar navbar-expand-md myNav">
+
+  <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link"><ds-auth-nav-menu></ds-auth-nav-menu></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link"><ds-lang-switch></ds-lang-switch></a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="mx-auto order-0 vertical-center">
+    <a class="navbar-brand mx-auto divChild" href='home'><div >reposiTUm</div></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+
+  <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href='https://www.ub.tuwien.ac.at/'>Bibliothek</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href='https://catalogplus.tuwien.ac.at/primo_library/libweb/action/search.do?vid=UTW'>CatalogPlus</a>
+      </li>
+    </ul>
+  </div>
+
+</nav>

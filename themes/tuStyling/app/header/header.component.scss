@@ -1,10 +1,35 @@
-.navbar-brand img {
-    height: $header-logo-height;
-    @media screen and (max-width: map-get($grid-breakpoints, sm)) {
-        height: $header-logo-height-xs;
-    }
+header {
+  position: relative;
 }
-.navbar-toggler .navbar-toggler-icon {
-    background-image: none !important;
-    line-height: 1.5;
+
+.navbar-brand {
+  font-size: xx-large;
+  color: white;
+//    @media screen and (max-width: map-get($grid-breakpoints, sm)) {
+//        height: $header-logo-height-xs;
+//    }
 }
+
+.vertical-center {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.navbar {
+  background-color: #006699;
+}
+
+.nav-link {
+  color: white;
+}
+
+nav a:hover {
+  color: #ededed;
+}
+
+.myNav {
+  height: 150px;
+}
+
+

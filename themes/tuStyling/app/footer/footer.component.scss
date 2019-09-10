@@ -1,18 +1,33 @@
-$footer-bg: $gray-100;
-$footer-border: 1px solid darken($footer-bg, 10%);
-$footer-padding: $spacer * 1.5;
-$footer-logo-height: 55px;
-
-.footer {
-  background-color: $footer-bg;
-  border-top: $footer-border;
+.container-fluid {
+  font-size: smaller;
+  height: 100px;
   text-align: center;
-  padding: $footer-padding;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #f8f9fa;
+  border: 1px solid darken(#f8f9fa, 10%);
+}
 
-  p {
-    margin: 0;
-  }
-  img {
-    height: $footer-logo-height;
-  }
+.vertical-center {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+img {
+  padding-right: 3px;
+}
+
+a {
+  color: black;
+}
+
+span {
+  padding-right: 20px;
+}
+
+
+.repoTU {
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
