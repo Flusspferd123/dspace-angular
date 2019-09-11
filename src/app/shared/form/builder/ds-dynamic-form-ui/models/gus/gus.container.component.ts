@@ -1,22 +1,22 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 
-import {Observable, of, of as observableOf} from 'rxjs';
-import {catchError, first, tap} from 'rxjs/operators';
+import { Observable, of, of as observableOf } from 'rxjs';
+import { catchError, first, tap } from 'rxjs/operators';
 import {
   DynamicFormControlComponent, DynamicFormControlEvent, DynamicFormControlModel,
   DynamicFormLayoutService,
   DynamicFormValidationService
 } from '@ng-dynamic-forms/core';
 
-import {AuthorityValue} from '../../../../../../core/integration/models/authority.value';
-import {PageInfo} from '../../../../../../core/shared/page-info.model';
-import {isNull, isUndefined} from '../../../../../empty.util';
-import {AuthorityService} from '../../../../../../core/integration/authority.service';
-import {IntegrationSearchOptions} from '../../../../../../core/integration/models/integration-options.model';
-import {IntegrationData} from '../../../../../../core/integration/integration-data';
-import {GUS_FORM_LAYOUT, GusModel} from './gus.model';
-import {PanelData} from './gus.panelData.models';
+import { AuthorityValue } from '../../../../../../core/integration/models/authority.value';
+import { PageInfo } from '../../../../../../core/shared/page-info.model';
+import { isNull, isUndefined } from '../../../../../empty.util';
+import { AuthorityService } from '../../../../../../core/integration/authority.service';
+import { IntegrationSearchOptions } from '../../../../../../core/integration/models/integration-options.model';
+import { IntegrationData } from '../../../../../../core/integration/integration-data';
+import { GUS_CONTAINER_LAYOUT, GusModel } from './gus.model';
+import { PanelData } from './gus.panelData.models';
 
 @Component({
   selector: 'ds-dynamic-gus-container',
@@ -40,7 +40,7 @@ export class GusContainerComponent extends DynamicFormControlComponent implement
   public optionsList: any;
   public panelData: PanelData[];
 
-  public formLayout = GUS_FORM_LAYOUT;
+  public formLayout = GUS_CONTAINER_LAYOUT;
 
   protected searchOptions: IntegrationSearchOptions;
 
@@ -73,26 +73,8 @@ export class GusContainerComponent extends DynamicFormControlComponent implement
       .subscribe((object: IntegrationData) => {
         this.optionsList = object.payload;
 
-        for (const option  of this.optionsList) {
-          const currAuthority: AuthorityValue = option as AuthorityValue;
-          const panelData: PanelData = new PanelData();
-          if ((currAuthority.display.match(new RegExp('::', 'g')) || []).length === 1) {
-            const parts: string[] = currAuthority.display.split('::');
-            const panelTitle: string = parts[1];
-            panelData.panelTitle = panelTitle;
-            // console.log('panelTitle: ', panelTitle);
-            const panelItemNames: string[] = new Array<string>();
-            for (const option1 of this.optionsList) {
-              // console.log('option1: ', option1);
-              if (option1.display.includes(panelTitle + '::')) {
-                panelItemNames.push(option1.display.split('::')[2])
-              }
-            }
-            panelData.panelItemNames = panelItemNames;
-            this.panelData.push(panelData);
-          }
+        this.setPanelData();
 
-        }
 
         if (this.model.value) {
           this.setCurrentValue(this.model.value);
@@ -100,6 +82,8 @@ export class GusContainerComponent extends DynamicFormControlComponent implement
         this.pageInfo = object.pageInfo;
         this.cdr.detectChanges();
       })
+
+
 
   }
 
@@ -144,4 +128,28 @@ export class GusContainerComponent extends DynamicFormControlComponent implement
   onEvent($event: DynamicFormControlEvent, type: string) {
     console.log('some event in GUS: ', $event)
   }
+
+  setPanelData() {
+    for (const option  of this.optionsList) {
+      const currAuthority: AuthorityValue = option as AuthorityValue;
+      const panelData: PanelData = new PanelData();
+      if ((currAuthority.display.match(new RegExp('::', 'g')) || []).length === 1) {
+        const parts: string[] = currAuthority.display.split('::');
+        const panelTitle: string = parts[1];
+        panelData.panelTitle = panelTitle;
+        // console.log('panelTitle: ', panelTitle);
+        const panelItemNames: string[] = new Array<string>();
+        for (const option1 of this.optionsList) {
+          // console.log('option1: ', option1);
+          if (option1.display.includes(panelTitle + '::')) {
+            panelItemNames.push(option1.display.split('::')[2])
+          }
+        }
+        panelData.panelItemNames = panelItemNames;
+        this.panelData.push(panelData);
+      }
+
+    }
+  }
+
 }

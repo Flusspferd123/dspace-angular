@@ -198,59 +198,10 @@ export class SubmissionSectionGusComponent extends SectionModelComponent {
         return observableOf(emptyResult);
       }),
       first())
-      .subscribe((object: IntegrationData) => {
-          console.log('IntegrationData: ', IntegrationData)
-          this.optionsList = object.payload;
-
-          for (const option  of this.optionsList) {
-            console.log('option: ', option);
-          }
-
-          for (const option  of this.optionsList) {
-            const currAuthority: AuthorityValue = option as AuthorityValue;
-            const panelData: PanelData = new PanelData();
-            if ((currAuthority.display.match(new RegExp('::', 'g')) || []).length === 1) {
-              const parts: string[] = currAuthority.display.split('::');
-              const panelTitle: string = parts[1];
-              panelData.panelTitle = panelTitle;
-              // console.log('panelTitle: ', panelTitle);
-              const panelItemNames: string[] = new Array<string>();
-              for (const option1 of this.optionsList) {
-                // console.log('option1: ', option1);
-                if (option1.display.includes(panelTitle + '::')) {
-                  panelItemNames.push(option1.display.split('::')[2])
-                }
-              }
-              panelData.panelItemNames = panelItemNames;
-              this.panelData.push(panelData);
-              console.log('this.panelData: ', this.panelData)
-            }
-
-          }
-
-        }
+      .subscribe((object: IntegrationData) => this.retrieveGusEntries(object),
+        (err) => console.log('There was an error retrieving the GUS entries'),
+        () => this.finishInit()
       );
-
-    // this is were the error gets thrown
-    // why do i have to hardcode this ?
-    this.sectionData.config = 'http://localhost:8080/server/api/config/submissionforms/gus';
-
-    this.formConfigService.getConfigByHref(this.sectionData.config).pipe(
-      map((configData: ConfigData) => configData.payload),
-      tap((config: SubmissionFormsModel) => this.formConfig = config),
-      flatMap(() => this.sectionService.getSectionData(this.submissionId, this.sectionData.id)),
-      take(1))
-      .subscribe((sectionData: WorkspaceitemSectionFormObject) => {
-        if (isUndefined(this.formModel)) {
-          this.sectionData.errors = [];
-          // Is the first loading so init form
-          this.initForm(sectionData);
-          this.sectionData.data = sectionData;
-          this.subscriptions();
-          this.isLoading = false;
-          this.cdr.detectChanges();
-        }
-      })
 
   }
 
@@ -319,15 +270,14 @@ export class SubmissionSectionGusComponent extends SectionModelComponent {
 
     const formFieldModel = new FormFieldModel();
     formFieldModel.input = {type: 'gus2'};
-    formFieldModel.label = 'MyLabel';
+    // formFieldModel.label = 'MyLabel';
     formFieldModel.mandatory = 'true';
     formFieldModel.mandatoryMessage = 'you must enter a value';
     formFieldModel.hints = 'My super duper hint';
 
+    const metaDataValueObjects = new Array<FormFieldMetadataValueObject>();
 
-    let metaDataValueObjects = new Array<FormFieldMetadataValueObject>();
-
-    let formFieldMetadataValueObject = new FormFieldMetadataValueObject();
+    const formFieldMetadataValueObject = new FormFieldMetadataValueObject();
     formFieldMetadataValueObject.metadata = 'dc.title';
     metaDataValueObjects.push(formFieldMetadataValueObject);
 
@@ -336,9 +286,12 @@ export class SubmissionSectionGusComponent extends SectionModelComponent {
     gusFormRowModel.fields = new Array<FormFieldModel>();
     gusFormRowModel.fields.push(formFieldModel);
 
-    formRowModel.push(gusFormRowModel);
-    testformConfig.rows = formRowModel;
+    // tslint:disable-next-line:prefer-for-of
+    for (let i = 0; i < this.panelData.length; i++) {
+      formRowModel.push(gusFormRowModel);
 
+    }
+    testformConfig.rows = formRowModel;
     this.formConfig = testformConfig;
 
     try {
@@ -503,5 +456,61 @@ export class SubmissionSectionGusComponent extends SectionModelComponent {
     } else {
       return false;
     }
+  }
+
+  private retrieveGusEntries(object: IntegrationData) {
+
+      console.log('IntegrationData: ', IntegrationData)
+      this.optionsList = object.payload;
+
+      for (const option  of this.optionsList) {
+        console.log('option: ', option);
+      }
+
+      for (const option  of this.optionsList) {
+        const currAuthority: AuthorityValue = option as AuthorityValue;
+        const panelData: PanelData = new PanelData();
+        if ((currAuthority.display.match(new RegExp('::', 'g')) || []).length === 1) {
+          const parts: string[] = currAuthority.display.split('::');
+          const panelTitle: string = parts[1];
+          panelData.panelTitle = panelTitle;
+          // console.log('panelTitle: ', panelTitle);
+          const panelItemNames: string[] = new Array<string>();
+          for (const option1 of this.optionsList) {
+            // console.log('option1: ', option1);
+            if (option1.display.includes(panelTitle + '::')) {
+              panelItemNames.push(option1.display.split('::')[2])
+            }
+          }
+          panelData.panelItemNames = panelItemNames;
+          this.panelData.push(panelData);
+          console.log('this.panelData in gus-section: ', this.panelData)
+        }
+
+      }
+
+  }
+
+  private finishInit() {
+    // this is were the error gets thrown
+    // why do i have to hardcode this ?
+    this.sectionData.config = 'http://localhost:8080/server/api/config/submissionforms/gus';
+
+    this.formConfigService.getConfigByHref(this.sectionData.config).pipe(
+      map((configData: ConfigData) => configData.payload),
+      tap((config: SubmissionFormsModel) => this.formConfig = config),
+      flatMap(() => this.sectionService.getSectionData(this.submissionId, this.sectionData.id)),
+      take(1))
+      .subscribe((sectionData: WorkspaceitemSectionFormObject) => {
+        if (isUndefined(this.formModel)) {
+          this.sectionData.errors = [];
+          // Is the first loading so init form
+          this.initForm(sectionData);
+          this.sectionData.data = sectionData;
+          this.subscriptions();
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        }
+      })
   }
 }

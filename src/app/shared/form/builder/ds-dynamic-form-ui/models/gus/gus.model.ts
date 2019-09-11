@@ -9,7 +9,7 @@ import { AuthorityOptions } from '../../../../../../core/integration/models/auth
 
 export const DYNAMIC_FORM_CONTROL_TYPE_GUS = 'GUS_TYPE';
 
-export const GUS_FORM_LAYOUT = {
+export const GUS_CONTAINER_LAYOUT = {
 
   granted: {
     element: {
