@@ -4,5 +4,5 @@ export enum SectionsType {
   License = 'license',
   CcLicense = 'cclicense',
   collection = 'collection',
-  gus = 'gus'
+  // gus = 'gus'
   }

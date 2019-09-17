@@ -97,7 +97,7 @@ const PROVIDERS = [
   {
     provide: RouterStateSerializer,
     useClass: DSpaceRouterStateSerializer
-  }
+  },
 ];
 
 const DECLARATIONS = [

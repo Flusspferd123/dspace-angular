@@ -15,18 +15,18 @@ import { isNull, isUndefined } from '../../../../../empty.util';
 import { AuthorityService } from '../../../../../../core/integration/authority.service';
 import { IntegrationSearchOptions } from '../../../../../../core/integration/models/integration-options.model';
 import { IntegrationData } from '../../../../../../core/integration/integration-data';
-import { GUS_CONTAINER_LAYOUT, GusModel } from './gus.model';
-import { PanelData } from './gus.panelData.models';
+import { PUBLICATIONTYPE_CONTAINER_LAYOUT, PublicationtypeModel } from './publicationtype.model';
+import { PanelData } from '../gus/gus.panelData.models';
 
 @Component({
-  selector: 'ds-dynamic-gus-container',
-  styleUrls: ['./gus.container.component.scss'],
-  templateUrl: './gus.container.component.html'
+  selector: 'ds-dynamic-publicationtype-container',
+  styleUrls: ['./publication-type.container.component.scss'],
+  templateUrl: './publication-type.container.component.html'
 })
-export class GusContainerComponent extends DynamicFormControlComponent implements OnInit {
+export class PublicationTypeContainerComponent extends DynamicFormControlComponent implements OnInit {
   @Input() bindId = true;
   @Input() formGroup: FormGroup;
-  @Input() model: GusModel;
+  @Input() model: PublicationtypeModel;
   @Input() formId: string;
   @Input() formModel: DynamicFormControlModel[];
 
@@ -38,11 +38,13 @@ export class GusContainerComponent extends DynamicFormControlComponent implement
   public loading = false;
   public pageInfo: PageInfo;
   public optionsList: any;
-  public panelData: PanelData[];
 
-  public formLayout = GUS_CONTAINER_LAYOUT;
+  public formLayout = PUBLICATIONTYPE_CONTAINER_LAYOUT;
 
   protected searchOptions: IntegrationSearchOptions;
+
+  public categorySet: Set<string>;
+  public categoryToTypesMap: Map<string, string[]>
 
   constructor(private authorityService: AuthorityService,
               private cdr: ChangeDetectorRef,
@@ -53,7 +55,8 @@ export class GusContainerComponent extends DynamicFormControlComponent implement
   }
 
   ngOnInit() {
-    this.panelData = new Array<PanelData>();
+    this.categorySet = new Set<string>();
+    this.categoryToTypesMap = new Map<string, string[]>();
     this.searchOptions = new IntegrationSearchOptions(
       this.model.authorityOptions.scope,
       this.model.authorityOptions.name,
@@ -72,8 +75,16 @@ export class GusContainerComponent extends DynamicFormControlComponent implement
       first())
       .subscribe((object: IntegrationData) => {
         this.optionsList = object.payload;
+        /*
 
-        this.setPanelData();
+                console.log('optionsList')
+
+                for (let optionsListKey in this.optionsList) {
+                  console.log('optionsListKey: ', optionsListKey)
+                }
+        */
+
+        this.setTypesData();
 
         if (this.model.value) {
           this.setCurrentValue(this.model.value);
@@ -84,13 +95,55 @@ export class GusContainerComponent extends DynamicFormControlComponent implement
 
   }
 
+  private setTypesData() {
+    // create the category set
+    for (const option  of this.optionsList) {
+      const currAuthority: AuthorityValue = option as AuthorityValue;
+
+      if ((currAuthority.display.match(new RegExp('::', 'g')) || []).length === 2) {
+        const parts: string[] = currAuthority.display.split('::');
+        const category: string = parts[1];
+        if (!this.categorySet.has(category)) {
+          this.categorySet.add(category)
+        }
+      }
+    }
+
+    console.log('set values: ', this.categorySet.values());
+
+    // create the categoryToTypesMap
+    // tslint:disable-next-line:forin
+    for (const category of Array.from(this.categorySet.values())) {
+      const typesPerCategory: string[] = new Array<string>();
+      for (const option  of this.optionsList) {
+        const currAuthority: AuthorityValue = option as AuthorityValue;
+        const parts: string[] = currAuthority.display.split('::');
+        if (parts.length === 3) {
+          const currAuthorityCategory: string = parts[1];
+          if (currAuthorityCategory === category) {
+            typesPerCategory.push(parts[2])
+          }
+        }
+       }
+      this.categoryToTypesMap.set(category, typesPerCategory);
+    }
+    console.log(this.categoryToTypesMap);
+  }
+
   inputFormatter = (x: AuthorityValue): string => x.display || x.value;
 
-  onChange($event: any): void {
+  onChange($event
+             :
+             any
+  ):
+    void {
     console.log('onChange() emitted: ', $event)
   }
 
-  onBlur(event: Event) {
+  onBlur(event
+           :
+           Event
+  ) {
     this.blur.emit(event);
   }
 
@@ -105,8 +158,12 @@ export class GusContainerComponent extends DynamicFormControlComponent implement
     this.setCurrentValue(event);
   }
 
-  setCurrentValue(value): void {
-    let result: string;
+  setCurrentValue(value)
+    :
+    void {
+    let result
+      :
+      string;
     if (isUndefined(value) || isNull(value)) {
       result = '';
     } else if (typeof value === 'string') {
@@ -122,31 +179,13 @@ export class GusContainerComponent extends DynamicFormControlComponent implement
     this.currentValue = observableOf(result);
   }
 
-  onEvent($event: DynamicFormControlEvent, type: string) {
-    console.log('some event in GUS: ', $event)
-  }
-
-  setPanelData() {
-    for (const option  of this.optionsList) {
-      const currAuthority: AuthorityValue = option as AuthorityValue;
-      const panelData: PanelData = new PanelData();
-      if ((currAuthority.display.match(new RegExp('::', 'g')) || []).length === 1) {
-        const parts: string[] = currAuthority.display.split('::');
-        const panelTitle: string = parts[1];
-        panelData.panelTitle = panelTitle;
-        // console.log('panelTitle: ', panelTitle);
-        const panelItemNames: string[] = new Array<string>();
-        for (const option1 of this.optionsList) {
-          // console.log('option1: ', option1);
-          if (option1.display.includes(panelTitle + '::')) {
-            panelItemNames.push(option1.display.split('::')[2])
-          }
-        }
-        panelData.panelItemNames = panelItemNames;
-        this.panelData.push(panelData);
-      }
-
-    }
+  onEvent($event
+            :
+            DynamicFormControlEvent, type
+            :
+            string
+  ) {
+    console.log('some event in PUBLICATIONTYPE: ', $event)
   }
 
 }

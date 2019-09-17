@@ -6,10 +6,10 @@ import {
 } from '../ds-dynamic-form-ui/models/scrollable-dropdown/dynamic-scrollable-dropdown.model';
 import { isNotEmpty } from '../../../empty.util';
 import { FormFieldMetadataValueObject } from '../models/form-field-metadata-value.model';
-import { GusModel } from '../ds-dynamic-form-ui/models/gus/gus.model';
-import { Gus2Model } from '../ds-dynamic-form-ui/models/gus/Gus2/gus2.model';
 
-export class Gus2FieldParser extends FieldParser {
+import { PublicationtypeModel } from '../ds-dynamic-form-ui/models/publicationType/publicationtype.model';
+
+export class PublicationTypeFieldParser extends FieldParser {
 
   public modelFactory(fieldValue?: FormFieldMetadataValueObject | any, label?: boolean): any {
     const dropdownModelConfig: DynamicScrollableDropdownModelConfig = this.initModel(null, label);
@@ -29,10 +29,10 @@ export class Gus2FieldParser extends FieldParser {
           host: 'col'
         }
       };
-      const gusModel = new Gus2Model(dropdownModelConfig, layout);
-      return gusModel;
+      const publicationTypeModel = new PublicationtypeModel(dropdownModelConfig, layout);
+      return publicationTypeModel;
     } else {
-      throw  Error(`Gus-field-parser error. Please check form configuration file.`);
+      throw  Error(`Publicationtype-field-parser error. Please check form configuration file.`);
     }
   }
 }

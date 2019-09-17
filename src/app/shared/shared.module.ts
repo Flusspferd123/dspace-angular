@@ -141,7 +141,8 @@ import { ItemDetailPreviewFieldComponent } from './object-detail/my-dspace-resul
 import {GusContainerComponent} from './form/builder/ds-dynamic-form-ui/models/gus/gus.container.component';
 import {GusItemComponent} from './form/builder/ds-dynamic-form-ui/models/gus/gusItem/gus-item.component';
 import {GusAccordionComponent} from './form/builder/ds-dynamic-form-ui/models/gus/GusAccordion/gus-accordion.component';
-import { Gus2Component } from './form/builder/ds-dynamic-form-ui/models/gus/Gus2/gus2.component';
+import { PublicationTypeContainerComponent } from './form/builder/ds-dynamic-form-ui/models/publicationType/publication-type.container.component';
+import { PublicationTypePresentationComponent } from './form/builder/ds-dynamic-form-ui/models/publicationType/presentation/publication-type.presentation.component';
 
 const MODULES = [
   // Do NOT include UniversalModule, HttpModule, or JsonpModule here
@@ -265,7 +266,8 @@ const COMPONENTS = [
   ItemTypeSwitcherComponent,
   BrowseByComponent,
   GusItemComponent,
-  Gus2Component
+  PublicationTypeContainerComponent,
+  PublicationTypePresentationComponent
 ];
 
 const ENTRY_COMPONENTS = [
@@ -289,7 +291,6 @@ const ENTRY_COMPONENTS = [
   DsDynamicListComponent,
   DsDynamicLookupComponent,
   GusContainerComponent,
-  Gus2Component,
   DsDynamicScrollableDropdownComponent,
   DsDynamicTagComponent,
   DsDynamicTypeaheadComponent,
@@ -310,7 +311,8 @@ const ENTRY_COMPONENTS = [
   StartsWithTextComponent,
   PlainTextMetadataListElementComponent,
   ItemMetadataListElementComponent,
-  MetadataRepresentationListElementComponent
+  MetadataRepresentationListElementComponent,
+  PublicationTypeContainerComponent
 ];
 
 const SHARED_ITEM_PAGE_COMPONENTS = [
