@@ -2,11 +2,11 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } fro
 import { FormControl, FormGroup } from '@angular/forms';
 
 import { Observable, of, of as observableOf } from 'rxjs';
-import { catchError, first, tap } from 'rxjs/operators';
+import { catchError, first } from 'rxjs/operators';
 import {
   DynamicFormControlComponent, DynamicFormControlEvent, DynamicFormControlModel,
   DynamicFormLayoutService,
-  DynamicFormValidationService
+  DynamicFormValidationService, DynamicSelectModel, DynamicSelectModelConfig
 } from '@ng-dynamic-forms/core';
 
 import { AuthorityValue } from '../../../../../../core/integration/models/authority.value';
@@ -16,7 +16,7 @@ import { AuthorityService } from '../../../../../../core/integration/authority.s
 import { IntegrationSearchOptions } from '../../../../../../core/integration/models/integration-options.model';
 import { IntegrationData } from '../../../../../../core/integration/integration-data';
 import { PUBLICATIONTYPE_CONTAINER_LAYOUT, PublicationtypeModel } from './publicationtype.model';
-import { PanelData } from '../gus/gus.panelData.models';
+import { DropdownOption } from './presentation/models/dropdownOption';
 
 @Component({
   selector: 'ds-dynamic-publicationtype-container',
@@ -44,7 +44,8 @@ export class PublicationTypeContainerComponent extends DynamicFormControlCompone
   protected searchOptions: IntegrationSearchOptions;
 
   public categorySet: Set<string>;
-  public categoryToTypesMap: Map<string, string[]>
+  public categoryToTypesMap: Map<string, DropdownOption[]>
+  public categoryDropDownOptions: DropdownOption[];
 
   constructor(private authorityService: AuthorityService,
               private cdr: ChangeDetectorRef,
@@ -55,8 +56,6 @@ export class PublicationTypeContainerComponent extends DynamicFormControlCompone
   }
 
   ngOnInit() {
-    this.categorySet = new Set<string>();
-    this.categoryToTypesMap = new Map<string, string[]>();
     this.searchOptions = new IntegrationSearchOptions(
       this.model.authorityOptions.scope,
       this.model.authorityOptions.name,
@@ -74,57 +73,57 @@ export class PublicationTypeContainerComponent extends DynamicFormControlCompone
       }),
       first())
       .subscribe((object: IntegrationData) => {
-        this.optionsList = object.payload;
-        /*
+          this.optionsList = object.payload;
 
-                console.log('optionsList')
-
-                for (let optionsListKey in this.optionsList) {
-                  console.log('optionsListKey: ', optionsListKey)
-                }
-        */
-
-        this.setTypesData();
-
-        if (this.model.value) {
-          this.setCurrentValue(this.model.value);
-        }
-        this.pageInfo = object.pageInfo;
-        this.cdr.detectChanges();
-      })
+          if (this.model.value) {
+            this.setCurrentValue(this.model.value);
+          }
+          this.pageInfo = object.pageInfo;
+          this.cdr.detectChanges();
+        },
+        (error) => console.log('There was an error retrieving the optionsList for publication type selector'),
+        () => this.setTypesData()
+      )
 
   }
 
   private setTypesData() {
-    // create the category set
+    this.categorySet = new Set<string>();
+    this.categoryToTypesMap = new Map<string, DropdownOption[]>();
+    this.categoryDropDownOptions = new Array<DropdownOption>();
+    // create the category dropdown set
     for (const option  of this.optionsList) {
       const currAuthority: AuthorityValue = option as AuthorityValue;
 
       if ((currAuthority.display.match(new RegExp('::', 'g')) || []).length === 2) {
         const parts: string[] = currAuthority.display.split('::');
         const category: string = parts[1];
+        // const dropdownOption = new DropdownOption(category, category) // category is used as label and value
         if (!this.categorySet.has(category)) {
           this.categorySet.add(category)
         }
       }
     }
-
-    console.log('set values: ', this.categorySet.values());
+    for (const category of Array.from(this.categorySet.values())) {
+      const dropDownOption: DropdownOption = new DropdownOption(category, category);
+      this.categoryDropDownOptions.push(dropDownOption);
+    }
+    console.log('categoryDropDownOptions: ', this.categoryDropDownOptions);
 
     // create the categoryToTypesMap
     // tslint:disable-next-line:forin
     for (const category of Array.from(this.categorySet.values())) {
-      const typesPerCategory: string[] = new Array<string>();
+      const typesPerCategory: DropdownOption[] = new Array<DropdownOption>();
       for (const option  of this.optionsList) {
         const currAuthority: AuthorityValue = option as AuthorityValue;
         const parts: string[] = currAuthority.display.split('::');
         if (parts.length === 3) {
           const currAuthorityCategory: string = parts[1];
           if (currAuthorityCategory === category) {
-            typesPerCategory.push(parts[2])
+            typesPerCategory.push(new DropdownOption(parts[2], parts[2]));
           }
         }
-       }
+      }
       this.categoryToTypesMap.set(category, typesPerCategory);
     }
     console.log(this.categoryToTypesMap);
@@ -132,18 +131,11 @@ export class PublicationTypeContainerComponent extends DynamicFormControlCompone
 
   inputFormatter = (x: AuthorityValue): string => x.display || x.value;
 
-  onChange($event
-             :
-             any
-  ):
-    void {
+  onChange($event: any): void {
     console.log('onChange() emitted: ', $event)
   }
 
-  onBlur(event
-           :
-           Event
-  ) {
+  onBlur(event: Event) {
     this.blur.emit(event);
   }
 
@@ -158,12 +150,8 @@ export class PublicationTypeContainerComponent extends DynamicFormControlCompone
     this.setCurrentValue(event);
   }
 
-  setCurrentValue(value)
-    :
-    void {
-    let result
-      :
-      string;
+  setCurrentValue(value): void {
+    let result: string;
     if (isUndefined(value) || isNull(value)) {
       result = '';
     } else if (typeof value === 'string') {
@@ -179,12 +167,7 @@ export class PublicationTypeContainerComponent extends DynamicFormControlCompone
     this.currentValue = observableOf(result);
   }
 
-  onEvent($event
-            :
-            DynamicFormControlEvent, type
-            :
-            string
-  ) {
+  onEvent($event: DynamicFormControlEvent, type: string) {
     console.log('some event in PUBLICATIONTYPE: ', $event)
   }
 
