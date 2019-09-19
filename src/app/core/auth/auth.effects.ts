@@ -18,7 +18,7 @@ import {
   AuthenticatedSuccessAction,
   AuthenticationErrorAction,
   AuthenticationSuccessAction,
-  CheckAuthenticationTokenErrorAction,
+  CheckAuthenticationTokenErrorAction, GetJWTafterShibbLoginAction,
   LogOutErrorAction,
   LogOutSuccessAction,
   RefreshTokenAction,
@@ -53,6 +53,22 @@ export class AuthEffects {
         );
       })
     );
+
+  /**
+   * Shib Login.
+   * @method shibLogin
+   */
+  @Effect()
+  public shibbLogin$: Observable<Action> = this.actions$.pipe(
+    ofType(AuthActionTypes.GET_JWT_AFTER_SHIBB_LOGIN),
+    switchMap((action: GetJWTafterShibbLoginAction) => {
+      return this.authService.startShibbAuth().pipe(
+        take(1),
+        map((response: AuthStatus) => new AuthenticationSuccessAction(response.token)),
+        catchError((error) => observableOf(new AuthenticationErrorAction(error)))
+      );
+    })
+  );
 
   @Effect()
   public authenticateSuccess$: Observable<Action> = this.actions$.pipe(
