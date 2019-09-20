@@ -273,7 +273,7 @@ const COMPONENTS = [
   TypedItemSearchResultGridElementComponent,
   ItemTypeSwitcherComponent,
   BrowseByComponent,
-  ItemTypeBadgeComponent
+  ItemTypeBadgeComponent,
   BrowseByComponent,
   GusItemComponent,
   PublicationTypeContainerComponent,
