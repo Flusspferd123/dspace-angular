@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {GetJWTafterShibbLoginAction} from '../../core/auth/auth.actions';
-import {Store} from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import {CoreState} from '../../core/core.reducers';
 import {Observable, of} from 'rxjs';
+import { isAuthenticationLoading } from '../../core/auth/selectors';
 
 @Component({
   selector: 'ds-shibboleth-page',
@@ -18,7 +19,10 @@ export class ShibbolethComponent implements OnInit {
   public loading: Observable<boolean>;
 
   ngOnInit() {
-    this.loading = of(true);
+    // this.loading = of(true);
+    // set loading
+    this.loading = this.store.pipe(select(isAuthenticationLoading));
+
     this.store.dispatch(new GetJWTafterShibbLoginAction());
   }
 
