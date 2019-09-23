@@ -376,6 +376,7 @@ export class AuthService {
           this.routeService.getHistory().pipe(
             take(1)
           ).subscribe((history) => {
+            console.log('history in redirectAfterLoginSuccess(): ', history );
             let redirUrl;
             if (isStandalonePage) {
               // For standalone login pages, use the previous route.
