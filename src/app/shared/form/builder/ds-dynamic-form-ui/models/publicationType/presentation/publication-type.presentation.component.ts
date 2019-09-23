@@ -1,10 +1,16 @@
-import {  Component, EventEmitter, Input, OnInit  } from '@angular/core';
-import {  FormGroup } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
 import {
-  DynamicFormControlComponent, DynamicFormControlEvent, DynamicFormControlModel, DynamicFormLayout,
+  DynamicFormControlComponent,
+  DynamicFormControlEvent,
+  DynamicFormControlModel,
+  DynamicFormGroupModel,
+  DynamicFormLayout,
   DynamicFormLayoutService,
-  DynamicFormValidationService, DynamicSelectModel
+  DynamicFormValidationService,
+  DynamicRadioGroupModel,
+  DynamicSelectModel
 } from '@ng-dynamic-forms/core';
 import { FormBuilderService } from '../../../../form-builder.service';
 import { TYPE_SELECTOR_FORM_LAYOUT, TypSelectorConstants } from './models/pubTypeModel';
@@ -47,7 +53,8 @@ export class PublicationTypePresentationComponent implements OnInit {
     typeDropDownModel.label = 'Pick the publication\'s type';
     typeDropDownModel.options = this.getTypeDropDownOptionsByKey(categoryDropDownModel.value);
     typeDropDownModel.value = null;
-    const typeSelectModel = new DynamicSelectModel(typeDropDownModel);
+
+    const typeSelectModel = new DynamicSelectModel<string>(typeDropDownModel);
     this.model.push(typeSelectModel);
   }
 
