@@ -17,7 +17,7 @@ export class ShibbolethComponent implements OnInit {
    * @type {boolean}
    */
   public loading: Observable<boolean>;
-  private isAuthenticated: Observable<boolean>;
+  public isAuthenticated: Observable<boolean>;
 
   ngOnInit() {
     // set isAuthenticated
