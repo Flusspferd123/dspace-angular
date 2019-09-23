@@ -46,7 +46,7 @@ export class ShibbolethComponent implements OnInit {
       filter((authenticated) => authenticated)
     ).subscribe(() => {
         console.log('Subscription in Shibb component was triggered');
-        this.authService.redirectAfterLoginSuccess(false);
+        this.authService.redirectAfterLoginSuccess(true);
       }
     );
   }

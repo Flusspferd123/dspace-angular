@@ -382,8 +382,8 @@ export class AuthService {
               // For standalone login pages, use the previous route.
               redirUrl = history[history.length - 2] || '';
             } else {
-              // redirUrl = history[history.length - 1] || '';
-              redirectUrl = '/home'
+              redirUrl = history[history.length - 1] || '';
+              // redirectUrl = '/home'
             }
             this.navigateToRedirectUrl(redirUrl);
           });
