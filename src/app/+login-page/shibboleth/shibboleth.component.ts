@@ -40,8 +40,8 @@ export class ShibbolethComponent implements OnInit {
     // subscribe to success
     this.store.pipe(
       select(isAuthenticated),
-      takeWhile(() => this.alive)
-      // filter((authenticated) => authenticated))
+      takeWhile(() => this.alive),
+      filter((authenticated) => authenticated)
     ).subscribe(() => {
           this.authService.redirectAfterLoginSuccess(false);
         }

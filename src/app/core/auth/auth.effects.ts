@@ -15,7 +15,7 @@ import {
   AuthenticateAction,
   AuthenticatedAction,
   AuthenticatedErrorAction,
-  AuthenticatedSuccessAction,
+  AuthenticatedSuccessAction, AuthenticatedSuccessActionShibboleth,
   AuthenticationErrorAction,
   AuthenticationSuccessAction,
   CheckAuthenticationTokenErrorAction, GetJWTafterShibbLoginAction,
@@ -64,7 +64,7 @@ export class AuthEffects {
     switchMap((action: GetJWTafterShibbLoginAction) => {
       return this.authService.startShibbAuth().pipe(
         take(1),
-        map((response: AuthStatus) => new AuthenticationSuccessAction(response.token)),
+        map((response: AuthStatus) => new AuthenticatedSuccessActionShibboleth(true, response.token)),
         catchError((error) => observableOf(new AuthenticationErrorAction(error)))
       );
     })

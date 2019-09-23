@@ -3,7 +3,7 @@ import {
   AddAuthenticationMessageAction,
   AuthActions,
   AuthActionTypes,
-  AuthenticatedSuccessAction,
+  AuthenticatedSuccessAction, AuthenticatedSuccessActionShibboleth,
   AuthenticationErrorAction,
   LogOutErrorAction,
   RedirectWhenAuthenticationIsRequiredAction,
@@ -86,6 +86,16 @@ export function authReducer(state: any = initialState, action: AuthActions): Aut
         error: (action as AuthenticationErrorAction).payload.message,
         loaded: true,
         loading: false
+      });
+
+    case AuthActionTypes.AUTHENTICATED_SUCCESS_SHIBBOLETH:
+      return Object.assign({}, state, {
+        authenticated: true,
+        authToken: (action as AuthenticatedSuccessActionShibboleth).payload.authToken,
+        loaded: true,
+        error: undefined,
+        loading: false,
+        info: undefined,
       });
 
     case AuthActionTypes.AUTHENTICATED_SUCCESS:
