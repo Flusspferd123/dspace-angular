@@ -89,6 +89,7 @@ export function authReducer(state: any = initialState, action: AuthActions): Aut
       });
 
     case AuthActionTypes.AUTHENTICATED_SUCCESS_SHIBBOLETH:
+      console.log('case AUTHENTICATED_SUCCESS_SHIBBOLETH was triggered');
       return Object.assign({}, state, {
         authenticated: true,
         authToken: (action as AuthenticatedSuccessActionShibboleth).payload.authToken,

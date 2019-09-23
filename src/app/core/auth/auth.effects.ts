@@ -64,6 +64,7 @@ export class AuthEffects {
     switchMap((action: GetJWTafterShibbLoginAction) => {
       return this.authService.startShibbAuth().pipe(
         take(1),
+        tap((response: AuthStatus) => console.log('SHIBB effect: ', response)),
         map((response: AuthStatus) => new AuthenticatedSuccessActionShibboleth(true, response.token)),
         catchError((error) => observableOf(new AuthenticationErrorAction(error)))
       );

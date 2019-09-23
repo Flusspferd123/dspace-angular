@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {GetJWTafterShibbLoginAction} from '../../core/auth/auth.actions';
+import { AuthenticatedSuccessActionShibboleth, GetJWTafterShibbLoginAction } from '../../core/auth/auth.actions';
 import { select, Store } from '@ngrx/store';
-import {CoreState} from '../../core/core.reducers';
-import {Observable, of} from 'rxjs';
+import { CoreState } from '../../core/core.reducers';
+import { Observable, of } from 'rxjs';
 import { isAuthenticated, isAuthenticationLoading } from '../../core/auth/selectors';
 import { filter, takeWhile } from 'rxjs/operators';
 import { AuthService } from '../../core/auth/auth.service';
+import { AuthTokenInfo } from '../../core/auth/models/auth-token-info.model';
 
 @Component({
   selector: 'ds-shibboleth-page',
@@ -37,17 +38,20 @@ export class ShibbolethComponent implements OnInit {
 
     this.store.dispatch(new GetJWTafterShibbLoginAction());
 
+
     // subscribe to success
     this.store.pipe(
       select(isAuthenticated),
       takeWhile(() => this.alive),
       filter((authenticated) => authenticated)
     ).subscribe(() => {
-          this.authService.redirectAfterLoginSuccess(false);
-        }
-      );
+        console.log('Subscription in Shibb component was triggered');
+        this.authService.redirectAfterLoginSuccess(false);
+      }
+    );
   }
 
-  constructor( private store: Store<CoreState>, private authService: AuthService) { }
+  constructor(private store: Store<CoreState>, private authService: AuthService) {
+  }
 
 }

@@ -361,6 +361,7 @@ export class AuthService {
    * Redirect to the route navigated before the login
    */
   public redirectAfterLoginSuccess(isStandalonePage: boolean) {
+    console.log('redirectAfterLoginSuccess was triggered');
     this.getRedirectUrl().pipe(
       take(1))
       .subscribe((redirectUrl) => {
