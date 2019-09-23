@@ -365,7 +365,7 @@ export class AuthService {
     this.getRedirectUrl().pipe(
       take(1))
       .subscribe((redirectUrl) => {
-
+        console.log('redirectURL in redirectAfterLoginSuccess(): ', redirectUrl);
         if (isNotEmpty(redirectUrl)) {
           this.clearRedirectUrl();
           this.router.onSameUrlNavigation = 'reload';
