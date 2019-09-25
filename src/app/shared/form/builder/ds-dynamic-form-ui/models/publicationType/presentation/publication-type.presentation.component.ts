@@ -41,7 +41,7 @@ export class PublicationTypePresentationComponent implements OnInit {
     this.model = [];
     const categoryDropDownModel = Object.create(null);
     categoryDropDownModel.id = TypSelectorConstants.CATEGORY_FORM_CONTROL_ID;
-    categoryDropDownModel.label = 'Pick the publication\'s category';
+    // categoryDropDownModel.label = 'Pick the publication\'s category';
     categoryDropDownModel.options = this.categoryDropDownOptions;
     // categoryDropDownModel.value = this.categoryDropDownOptions[0].value;
     categoryDropDownModel.value = null;

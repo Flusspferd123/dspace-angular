@@ -1,8 +1,9 @@
 <ngb-accordion #acc="ngbAccordion"
-               (panelChange)="onChange($event)">
+               (panelChange)="onChange($event)"
+               class="accordion">
 
-  <ngb-panel title={{panelData.panelTitle}}>
-
+  <ngb-panel title={{panelData.panelTitle}}
+  class="accordion">
 
 
     <ng-template ngbPanelContent>
@@ -11,8 +12,6 @@
         *ngFor="let panelItemName of panelData.panelItemNames"
         [itemLabel]="panelItemName">
       </ds-gus-item>
-
-
 
 
     </ng-template>
