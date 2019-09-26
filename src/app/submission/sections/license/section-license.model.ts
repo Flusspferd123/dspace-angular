@@ -50,7 +50,7 @@ export const SECTION_LICENSE_FORM_MODEL = [
   new DynamicRadioGroupModel<string>({
 
     id: 'OpenAccessPayment',
-    label: 'Payment for Open Access is executed by',
+    label: 'Costs for Open Access is assumed by',
     options: [
       {
         label: 'TU Biblothek',
