@@ -1,6 +1,9 @@
 input {
   max-width: 80px !important;
+  border-radius: 0.25rem !important;
+  border: 1px solid #ced4da;
 }
-.div-horizontal .control-label.text-left{
-  text-align: left;
+
+.control-label {
+  color: black;
 }

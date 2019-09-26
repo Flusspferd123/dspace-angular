@@ -1,22 +1,21 @@
-<ngb-accordion #acc="ngbAccordion"
-               (panelChange)="onChange($event)"
-               class="accordion">
+  <ngb-accordion
+    (panelChange)="onChange($event)">
 
-  <ngb-panel title={{panelData.panelTitle}}
-  class="accordion">
+    <ngb-panel title={{panelData.panelTitle}} >
 
 
-    <ng-template ngbPanelContent>
+      <ng-template ngbPanelContent>
 
-      <ds-gus-item
-        *ngFor="let panelItemName of panelData.panelItemNames"
-        [itemLabel]="panelItemName">
-      </ds-gus-item>
-
-
-    </ng-template>
-
-  </ngb-panel>
+        <ds-gus-item
+          *ngFor="let panelItemName of panelData.panelItemNames"
+          [itemLabel]="panelItemName">
+        </ds-gus-item>
 
 
-</ngb-accordion>
+      </ng-template>
+
+    </ngb-panel>
+
+
+  </ngb-accordion>
+
