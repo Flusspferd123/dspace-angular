@@ -41,11 +41,11 @@ export class DataFileComponent extends ItemComponent implements OnInit {
 
     if (this.resolvedRelsAndTypes$) {
 
-      this.authors$ = this.buildRepresentations('Person', 'dc.contributor.author', this.ids);
+      this.authors$ = this.buildRepresentations('Person', 'dc.contributor.author');
 
       this.dataPackages$ = this.resolvedRelsAndTypes$.pipe(
         filterRelationsByTypeLabel('isDataPackageOfDataFile'),
-        relationsToItems(this.item.id, this.ids)
+        relationsToItems(this.item.id)
       );
 
     }
