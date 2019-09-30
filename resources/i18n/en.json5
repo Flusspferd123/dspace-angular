@@ -730,6 +730,10 @@
   "submission.sections.submit.progressbar.describe.article": "Article's data",
   "submission.sections.submit.progressbar.describe.wissensbilanz": "Data required by § Wissensbilanz-Verordnung",
   "submission.sections.submit.progressbar.describe.journal": "Journal's data - journal containing this article",
+  "submission.sections.submit.progressbar.describe.proceedings": "Proceeding's data",
+  "submission.sections.submit.progressbar.describe.conference": "conference's data",
+
+
   "submission.sections.submit.progressbar.describe.project": "Project data",
   "submission.sections.upload.delete.confirm.cancel": "Cancel",
   "submission.sections.upload.delete.confirm.info": "This operation can't be undone. Are you sure?",
