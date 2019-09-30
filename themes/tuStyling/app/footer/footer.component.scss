@@ -1,0 +1,34 @@
+.container-fluid {
+  font-size: smaller;
+  height: 100px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #f8f9fa;
+  border: 1px solid darken(#f8f9fa, 10%);
+}
+
+.vertical-center {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+img {
+  padding-right: 3px;
+  height: 50px;
+}
+
+a {
+  color: black;
+}
+
+span {
+  padding-right: 20px;
+}
+
+
+.repoTU {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}

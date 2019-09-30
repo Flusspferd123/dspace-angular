@@ -1,0 +1,37 @@
+nav.navbar {
+    border-bottom: 1px $gray-400 solid;
+    align-items: baseline;
+  background-color: #006699;
+  color: white;
+}
+
+/** Mobile menu styling **/
+@media screen and (max-width: map-get($grid-breakpoints, md)) {
+    .navbar {
+        width: 100%;
+        background-color: #9d9d9c;
+        position: absolute;
+        overflow: hidden;
+        height: 0;
+        &.open {
+            height: 100vh; //doesn't matter because wrapper is sticky
+        }
+    }
+}
+
+@media screen and (min-width: map-get($grid-breakpoints, md)) {
+    .reset-padding-md {
+        margin-left: -$spacer/2;
+        margin-right: -$spacer/2;
+    }
+}
+
+/* TODO remove when https://github.com/twbs/bootstrap/issues/24726 is fixed */
+.navbar-expand-md.navbar-container {
+    @media screen and (max-width: map-get($grid-breakpoints, md)) {
+        > .container {
+            padding: 0 $spacer;
+        }
+        padding: 0;
+    }
+}
