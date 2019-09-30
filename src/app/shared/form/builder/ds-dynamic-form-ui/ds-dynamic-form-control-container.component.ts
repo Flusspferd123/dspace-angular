@@ -68,6 +68,10 @@ import { DsDynamicFormArrayComponent } from './models/array-group/dynamic-form-a
 import { DsDynamicRelationGroupComponent } from './models/relation-group/dynamic-relation-group.components';
 import { DYNAMIC_FORM_CONTROL_TYPE_RELATION_GROUP } from './models/relation-group/dynamic-relation-group.model';
 import { DsDatePickerInlineComponent } from './models/date-picker-inline/dynamic-date-picker-inline.component';
+import { DYNAMIC_FORM_CONTROL_TYPE_GUS } from './models/gus/gus.model';
+import { GusContainerComponent } from './models/gus/gus.container.component';
+import { DYNAMIC_FORM_CONTROL_TYPE_PUBLICATIONTYPE } from './models/publicationType/publicationtype.model';
+import { PublicationTypeContainerComponent } from './models/publicationType/publication-type.container.component';
 
 export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<DynamicFormControl> | null {
   switch (model.type) {
@@ -109,6 +113,12 @@ export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<
 
     case DYNAMIC_FORM_CONTROL_TYPE_SCROLLABLE_DROPDOWN:
       return DsDynamicScrollableDropdownComponent;
+
+    case DYNAMIC_FORM_CONTROL_TYPE_GUS:
+      return GusContainerComponent;
+
+    case DYNAMIC_FORM_CONTROL_TYPE_PUBLICATIONTYPE:
+      return PublicationTypeContainerComponent;
 
     case DYNAMIC_FORM_CONTROL_TYPE_TAG:
       return DsDynamicTagComponent;
@@ -166,6 +176,7 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
   }
 
   protected test: boolean;
+
   constructor(
     protected componentFactoryResolver: ComponentFactoryResolver,
     protected layoutService: DynamicFormLayoutService,

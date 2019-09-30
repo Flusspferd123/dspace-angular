@@ -725,6 +725,16 @@
   "submission.sections.submit.progressbar.license": "Deposit license",
   "submission.sections.submit.progressbar.upload": "Upload files",
 
+  "submission.sections.submit.progressbar.describe.gus": "Gesamtuniversitäre Schwerpunkte",
+  "submission.sections.submit.progressbar.describe.publicationTypeSelector": "Publication type",
+  "submission.sections.submit.progressbar.describe.article": "Article's data",
+  "submission.sections.submit.progressbar.describe.wissensbilanz": "Data required by § Wissensbilanz-Verordnung",
+  "submission.sections.submit.progressbar.describe.journal": "Journal's data - journal containing this article",
+  "submission.sections.submit.progressbar.describe.proceedings": "Proceeding's data",
+  "submission.sections.submit.progressbar.describe.conference": "conference's data",
+
+
+  "submission.sections.submit.progressbar.describe.project": "Project data",
   "submission.sections.upload.delete.confirm.cancel": "Cancel",
   "submission.sections.upload.delete.confirm.info": "This operation can't be undone. Are you sure?",
   "submission.sections.upload.delete.confirm.submit": "Yes, I'm sure",
