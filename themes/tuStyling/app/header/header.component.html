@@ -1,35 +1,56 @@
-<nav class="navbar navbar-expand-md myNav">
+<!--<nav class="navbar navbar-expand-md myNav">-->
 
-  <div class="bib-cat navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
-    <ul class="navbar-nav mr-auto">
+<!--  <div class="bib-cat navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">-->
+<!--    <ul class="navbar-nav mr-auto">-->
 <!--      <li class="nav-item">-->
-<!--        <a class="nav-link" href='https://www.ub.tuwien.ac.at/'>Bibliothek</a>-->
+<!--        <a class="nav-link" routerLink="/home">Home</a>-->
 <!--      </li>-->
+<!--    </ul>-->
+<!--  </div>-->
+
+<!--  <div class="mx-auto order-0 vertical-center">-->
+<!--    <a class="navbar-brand mx-auto divChild" href='home'></a>-->
+<!--    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">-->
+<!--      <span class="navbar-toggler-icon"></span>-->
+<!--    </button>-->
+<!--  </div>-->
+
+<!--  <div class="navbar-collapse collapse w-100 order-3">-->
+<!--    <ul class="navbar-nav ml-auto">-->
 <!--      <li class="nav-item">-->
-<!--        <a class="nav-link" href='https://catalogplus.tuwien.ac.at/primo_library/libweb/action/search.do?vid=UTW'>CatalogPlus</a>-->
+<!--        <a class="nav-link"><ds-lang-switch></ds-lang-switch></a>-->
 <!--      </li>-->
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/home">Home</a>
-      </li>
-    </ul>
-  </div>
+<!--      <li class="nav-item active">-->
+<!--        <a class="nav-link"><ds-auth-nav-menu></ds-auth-nav-menu></a>-->
+<!--      </li>-->
+<!--    </ul>-->
+<!--  </div>-->
+<!--  <div class="pl-2">-->
+<!--    <button class="navbar-toggler" type="button" (click)="toggleNavbar()"-->
+<!--            aria-controls="collapsingNav"-->
+<!--            aria-expanded="false" aria-label="Toggle navigation">-->
+<!--      <span class="navbar-toggler-icon fas fa-bars fa-fw" aria-hidden="true"></span>-->
+<!--    </button>-->
+<!--  </div>-->
 
-  <div class="mx-auto order-0 vertical-center">
-    <a class="navbar-brand mx-auto divChild" href='home'></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  </div>
+<!--</nav>-->
 
-  <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-        <a class="nav-link"><ds-lang-switch></ds-lang-switch></a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link"><ds-auth-nav-menu></ds-auth-nav-menu></a>
-      </li>
-    </ul>
-  </div>
+<header class="navbar">
+  <div class="container">
+    <a class="nav-link" routerLink="/home">Home</a>
 
-</nav>
+    <nav class="navbar navbar-expand-md ml-auto px-0">
+      <a routerLink="/search" class="px-1"><i class="fas fa-search fa-lg fa-fw" [title]="'nav.search' | translate"></i></a>
+      <ds-lang-switch></ds-lang-switch>
+      <ds-auth-nav-menu></ds-auth-nav-menu>
+      <div class="pl-2">
+        <button class="navbar-toggler" type="button" (click)="toggleNavbar()"
+                aria-controls="collapsingNav"
+                aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon fas fa-bars fa-fw" aria-hidden="true"></span>
+        </button>
+      </div>
+    </nav>
+  </div>
+</header>
+
