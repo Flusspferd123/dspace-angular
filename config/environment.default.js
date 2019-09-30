@@ -157,7 +157,7 @@ module.exports = {
     }
   },
   theme: {
-    name: 'default'
-    // name: 'tuStyling'
+   /* name: 'default'*/
+     name: 'tuStyling'
   }
 };
