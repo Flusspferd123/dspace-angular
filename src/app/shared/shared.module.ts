@@ -143,6 +143,11 @@ import { DsoInputSuggestionsComponent } from './input-suggestions/dso-input-sugg
 import { TypedItemSearchResultGridElementComponent } from './object-grid/item-grid-element/item-types/typed-item-search-result-grid-element.component';
 import { PublicationGridElementComponent } from './object-grid/item-grid-element/item-types/publication/publication-grid-element.component';
 import { ItemTypeBadgeComponent } from './object-list/item-type-badge/item-type-badge.component';
+import {GusContainerComponent} from './form/builder/ds-dynamic-form-ui/models/gus/gus.container.component';
+import {GusItemComponent} from './form/builder/ds-dynamic-form-ui/models/gus/gusItem/gus-item.component';
+import {GusAccordionComponent} from './form/builder/ds-dynamic-form-ui/models/gus/GusAccordion/gus-accordion.component';
+import { PublicationTypeContainerComponent } from './form/builder/ds-dynamic-form-ui/models/publicationType/publication-type.container.component';
+import { PublicationTypePresentationComponent } from './form/builder/ds-dynamic-form-ui/models/publicationType/presentation/publication-type.presentation.component';
 
 const MODULES = [
   // Do NOT include UniversalModule, HttpModule, or JsonpModule here
@@ -204,6 +209,8 @@ const COMPONENTS = [
   DsDynamicListComponent,
   DsDynamicLookupComponent,
   DsDynamicScrollableDropdownComponent,
+  GusContainerComponent,
+  GusAccordionComponent,
   DsDynamicTagComponent,
   DsDynamicTypeaheadComponent,
   DsDynamicRelationGroupComponent,
@@ -266,7 +273,11 @@ const COMPONENTS = [
   TypedItemSearchResultGridElementComponent,
   ItemTypeSwitcherComponent,
   BrowseByComponent,
-  ItemTypeBadgeComponent
+  ItemTypeBadgeComponent,
+  BrowseByComponent,
+  GusItemComponent,
+  PublicationTypeContainerComponent,
+  PublicationTypePresentationComponent
 ];
 
 const ENTRY_COMPONENTS = [
@@ -290,6 +301,7 @@ const ENTRY_COMPONENTS = [
   SearchResultGridElementComponent,
   DsDynamicListComponent,
   DsDynamicLookupComponent,
+  GusContainerComponent,
   DsDynamicScrollableDropdownComponent,
   DsDynamicTagComponent,
   DsDynamicTypeaheadComponent,
@@ -310,7 +322,8 @@ const ENTRY_COMPONENTS = [
   StartsWithTextComponent,
   PlainTextMetadataListElementComponent,
   ItemMetadataListElementComponent,
-  MetadataRepresentationListElementComponent
+  MetadataRepresentationListElementComponent,
+  PublicationTypeContainerComponent
 ];
 
 const SHARED_ITEM_PAGE_COMPONENTS = [

@@ -40,6 +40,7 @@ import { NavbarModule } from './navbar/navbar.module';
 import { JournalEntitiesModule } from './entity-groups/journal-entities/journal-entities.module';
 import { ResearchEntitiesModule } from './entity-groups/research-entities/research-entities.module';
 import { ClientCookieService } from './core/services/client-cookie.service';
+import { ShibbolethComponent } from './+login-page/shibboleth/shibboleth.component';
 
 export function getConfig() {
   return ENV_CONFIG;
@@ -112,7 +113,8 @@ const DECLARATIONS = [
   FooterComponent,
   PageNotFoundComponent,
   NotificationComponent,
-  NotificationsBoardComponent
+  NotificationsBoardComponent,
+  ShibbolethComponent
 ];
 
 const EXPORTS = [

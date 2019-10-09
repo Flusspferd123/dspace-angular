@@ -10,10 +10,12 @@ import { AuthTokenInfo } from './models/auth-token-info.model';
 
 export const AuthActionTypes = {
   AUTHENTICATE: type('dspace/auth/AUTHENTICATE'),
+  GET_JWT_AFTER_SHIBB_LOGIN: type('dspace/auth/GET_JWT_AFTER_SHIBB_LOGIN'),
   AUTHENTICATE_ERROR: type('dspace/auth/AUTHENTICATE_ERROR'),
   AUTHENTICATE_SUCCESS: type('dspace/auth/AUTHENTICATE_SUCCESS'),
   AUTHENTICATED: type('dspace/auth/AUTHENTICATED'),
   AUTHENTICATED_ERROR: type('dspace/auth/AUTHENTICATED_ERROR'),
+  AUTHENTICATED_SUCCESS_SHIBBOLETH: type('dspace/auth/AUTHENTICATED_SUCCESS_SHIBBOLETH'),
   AUTHENTICATED_SUCCESS: type('dspace/auth/AUTHENTICATED_SUCCESS'),
   CHECK_AUTHENTICATION_TOKEN: type('dspace/auth/CHECK_AUTHENTICATION_TOKEN'),
   CHECK_AUTHENTICATION_TOKEN_ERROR: type('dspace/auth/CHECK_AUTHENTICATION_TOKEN_ERROR'),
@@ -48,7 +50,33 @@ export class AuthenticateAction implements Action {
   };
 
   constructor(email: string, password: string) {
-    this.payload = { email, password };
+    this.payload = {email, password};
+  }
+}
+
+/**
+ * GetJWTafterShibbLoginAction.
+ * @class GetJWTafterShibbLoginAction
+ * @implements {Action}
+ */
+export class GetJWTafterShibbLoginAction implements Action {
+  public type: string = AuthActionTypes.GET_JWT_AFTER_SHIBB_LOGIN;
+}
+
+/**
+ * Authenticated check success.
+ * @class AuthenticatedSuccessAction
+ * @implements {Action}
+ */
+export class AuthenticatedSuccessActionShibboleth implements Action {
+  public type: string = AuthActionTypes.AUTHENTICATED_SUCCESS_SHIBBOLETH;
+  payload: {
+    authenticated: boolean;
+    authToken: AuthTokenInfo;
+  };
+
+  constructor(authenticated: boolean, authToken: AuthTokenInfo) {
+    this.payload = {authenticated, authToken};
   }
 }
 
@@ -80,7 +108,7 @@ export class AuthenticatedSuccessAction implements Action {
   };
 
   constructor(authenticated: boolean, authToken: AuthTokenInfo, user: EPerson) {
-    this.payload = { authenticated, authToken, user };
+    this.payload = {authenticated, authToken, user};
   }
 }
 
@@ -94,7 +122,7 @@ export class AuthenticatedErrorAction implements Action {
   payload: Error;
 
   constructor(payload: Error) {
-    this.payload = payload ;
+    this.payload = payload;
   }
 }
 
@@ -108,7 +136,7 @@ export class AuthenticationErrorAction implements Action {
   payload: Error;
 
   constructor(payload: Error) {
-    this.payload = payload ;
+    this.payload = payload;
   }
 }
 
@@ -151,7 +179,9 @@ export class CheckAuthenticationTokenErrorAction implements Action {
  */
 export class LogOutAction implements Action {
   public type: string = AuthActionTypes.LOG_OUT;
-  constructor(public payload?: any) {}
+
+  constructor(public payload?: any) {
+  }
 }
 
 /**
@@ -164,7 +194,7 @@ export class LogOutErrorAction implements Action {
   payload: Error;
 
   constructor(payload: Error) {
-    this.payload = payload ;
+    this.payload = payload;
   }
 }
 
@@ -175,7 +205,9 @@ export class LogOutErrorAction implements Action {
  */
 export class LogOutSuccessAction implements Action {
   public type: string = AuthActionTypes.LOG_OUT_SUCCESS;
-  constructor(public payload?: any) {}
+
+  constructor(public payload?: any) {
+  }
 }
 
 /**
@@ -188,7 +220,7 @@ export class RedirectWhenAuthenticationIsRequiredAction implements Action {
   payload: string;
 
   constructor(message: string) {
-    this.payload = message ;
+    this.payload = message;
   }
 }
 
@@ -202,7 +234,7 @@ export class RedirectWhenTokenExpiredAction implements Action {
   payload: string;
 
   constructor(message: string) {
-    this.payload = message ;
+    this.payload = message;
   }
 }
 
@@ -267,7 +299,7 @@ export class RegistrationErrorAction implements Action {
   payload: Error;
 
   constructor(payload: Error) {
-    this.payload = payload ;
+    this.payload = payload;
   }
 }
 
@@ -318,7 +350,7 @@ export class SetRedirectUrlAction implements Action {
   payload: string;
 
   constructor(url: string) {
-    this.payload = url ;
+    this.payload = url;
   }
 }
 
@@ -330,6 +362,8 @@ export class SetRedirectUrlAction implements Action {
  */
 export type AuthActions
   = AuthenticateAction
+  | GetJWTafterShibbLoginAction
+  | AuthenticatedSuccessActionShibboleth
   | AuthenticatedAction
   | AuthenticatedErrorAction
   | AuthenticatedSuccessAction

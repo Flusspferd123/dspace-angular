@@ -38,7 +38,7 @@ export class AuthRequestService {
     return isNotEmpty(method) ? `${endpoint}/${method}` : `${endpoint}`;
   }
 
-  public postToEndpoint(method: string, body: any, options?: HttpOptions): Observable<any> {
+  public postToEndpoint(method: string, body?: any, options?: HttpOptions): Observable<any> {
     return this.halService.getEndpoint(this.linkName).pipe(
       filter((href: string) => isNotEmpty(href)),
       map((endpointURL) => this.getEndpointByMethod(endpointURL, method)),
