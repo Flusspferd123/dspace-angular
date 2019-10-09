@@ -1,0 +1,19 @@
+.dropdown-toggle::after {
+  display:none;
+}
+
+.dropdown-menu {
+  background-color: white;
+}
+
+.dropdown-item {
+  cursor: pointer;
+}
+
+.px-1 {
+  color: white;
+}
+
+div a:hover {
+  color: #ededed;
+}

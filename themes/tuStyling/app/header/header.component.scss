@@ -1,0 +1,58 @@
+header {
+  position: relative;
+}
+
+.navbar-brand img {
+  height: 200px;
+  @media screen and (max-width: map-get($grid-breakpoints, sm)) {
+    height: $header-logo-height-xs;
+  }
+}
+
+.vertical-center {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.navbar {
+  background-color: #006699;
+}
+
+.nav-link {
+  margin-left: -15px;
+  color: white;
+}
+
+nav a:hover {
+  color: #ededed;
+}
+
+//.myNav {
+//  height: 70px;
+//}
+
+//.bib-cat {
+//  margin-left: 10px;
+//}
+
+.navbar-toggler .navbar-toggler-icon {
+  background-image: none !important;
+  line-height: 1.5;
+}
+
+.divChild {
+  display: block;
+}
+
+//.container {
+//  background-color: #006699;
+//}
+
+.px-1 {
+  color: white;
+}
+
+.fa-bars {
+  color: white;
+}
