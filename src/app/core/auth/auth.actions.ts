@@ -7,18 +7,22 @@ import { type } from '../../shared/ngrx/type';
 // import models
 import { EPerson } from '../eperson/models/eperson.model';
 import { AuthTokenInfo } from './models/auth-token-info.model';
+import { AuthMethodModel } from './models/auth-method.model';
 
 export const AuthActionTypes = {
   AUTHENTICATE: type('dspace/auth/AUTHENTICATE'),
+  START_SHIBBOLETH_AUTHENTICATION: type('dspace/auth/START_SHIBBOLETH_AUTHENTICATION'),
   GET_JWT_AFTER_SHIBB_LOGIN: type('dspace/auth/GET_JWT_AFTER_SHIBB_LOGIN'),
   AUTHENTICATE_ERROR: type('dspace/auth/AUTHENTICATE_ERROR'),
   AUTHENTICATE_SUCCESS: type('dspace/auth/AUTHENTICATE_SUCCESS'),
   AUTHENTICATED: type('dspace/auth/AUTHENTICATED'),
   AUTHENTICATED_ERROR: type('dspace/auth/AUTHENTICATED_ERROR'),
-  AUTHENTICATED_SUCCESS_SHIBBOLETH: type('dspace/auth/AUTHENTICATED_SUCCESS_SHIBBOLETH'),
   AUTHENTICATED_SUCCESS: type('dspace/auth/AUTHENTICATED_SUCCESS'),
   CHECK_AUTHENTICATION_TOKEN: type('dspace/auth/CHECK_AUTHENTICATION_TOKEN'),
   CHECK_AUTHENTICATION_TOKEN_ERROR: type('dspace/auth/CHECK_AUTHENTICATION_TOKEN_ERROR'),
+  RETRIEVE_AUTH_METHODS: type('dspace/auth/RETRIEVE_AUTH_METHODS'),
+  RETRIEVE_AUTH_METHODS_SUCCESS: type('dspace/auth/RETRIEVE_AUTH_METHODS_SUCCESS'),
+  RETRIEVE_AUTH_METHODS_ERROR: type('dspace/auth/RETRIEVE_AUTH_METHODS_ERROR'),
   REDIRECT_TOKEN_EXPIRED: type('dspace/auth/REDIRECT_TOKEN_EXPIRED'),
   REDIRECT_AUTHENTICATION_REQUIRED: type('dspace/auth/REDIRECT_AUTHENTICATION_REQUIRED'),
   REFRESH_TOKEN: type('dspace/auth/REFRESH_TOKEN'),
@@ -55,29 +59,26 @@ export class AuthenticateAction implements Action {
 }
 
 /**
+ * Authenticate.
+ * @class StartShibbolethAuthenticationAction
+ * @implements {Action}
+ */
+export class StartShibbolethAuthenticationAction implements Action {
+  public type: string = AuthActionTypes.START_SHIBBOLETH_AUTHENTICATION;
+  payload: AuthMethodModel;
+
+  constructor(authMethodModel: AuthMethodModel) {
+    this.payload = authMethodModel;
+  }
+}
+
+/**
  * GetJWTafterShibbLoginAction.
  * @class GetJWTafterShibbLoginAction
  * @implements {Action}
  */
 export class GetJWTafterShibbLoginAction implements Action {
   public type: string = AuthActionTypes.GET_JWT_AFTER_SHIBB_LOGIN;
-}
-
-/**
- * Authenticated check success.
- * @class AuthenticatedSuccessAction
- * @implements {Action}
- */
-export class AuthenticatedSuccessActionShibboleth implements Action {
-  public type: string = AuthActionTypes.AUTHENTICATED_SUCCESS_SHIBBOLETH;
-  payload: {
-    authenticated: boolean;
-    authToken: AuthTokenInfo;
-  };
-
-  constructor(authenticated: boolean, authToken: AuthTokenInfo) {
-    this.payload = {authenticated, authToken};
-  }
 }
 
 /**
@@ -340,6 +341,39 @@ export class ResetAuthenticationMessagesAction implements Action {
   public type: string = AuthActionTypes.RESET_MESSAGES;
 }
 
+// // Next three Actions are used by dynamic login methods
+/**
+ * Action that triggers an effect fetching the authentication methods enabled ant the backend
+ * @class  RetrieveAuthMethodsAction
+ * @implements {Action}
+ */
+export class RetrieveAuthMethodsAction implements Action {
+  public type: string = AuthActionTypes.RETRIEVE_AUTH_METHODS;
+}
+
+/**
+ * Get Authentication methods enabled at the backend
+ * @class RetrieveAuthMethodsSuccessAction
+ * @implements {Action}
+ */
+export class RetrieveAuthMethodsSuccessAction implements Action {
+  public type: string = AuthActionTypes.RETRIEVE_AUTH_METHODS_SUCCESS;
+  payload: AuthMethodModel[];
+
+  constructor(authMethods: AuthMethodModel[] ) {
+    this.payload = authMethods;
+  }
+}
+
+/**
+ * Check if token is already present upon initial load.
+ * @class CheckAuthenticationTokenAction
+ * @implements {Action}
+ */
+export class RetrieveAuthMethodsErrorAction implements Action {
+  public type: string = AuthActionTypes.RETRIEVE_AUTH_METHODS_ERROR;
+}
+
 /**
  * Change the redirect url.
  * @class SetRedirectUrlAction
@@ -363,7 +397,6 @@ export class SetRedirectUrlAction implements Action {
 export type AuthActions
   = AuthenticateAction
   | GetJWTafterShibbLoginAction
-  | AuthenticatedSuccessActionShibboleth
   | AuthenticatedAction
   | AuthenticatedErrorAction
   | AuthenticatedSuccessAction
@@ -377,4 +410,7 @@ export type AuthActions
   | RegistrationErrorAction
   | RegistrationSuccessAction
   | AddAuthenticationMessageAction
-  | ResetAuthenticationMessagesAction;
+  | ResetAuthenticationMessagesAction
+  | RetrieveAuthMethodsAction
+  | RetrieveAuthMethodsSuccessAction
+  | RetrieveAuthMethodsErrorAction;

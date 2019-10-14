@@ -26,7 +26,11 @@ import {
   RefreshTokenSuccessAction,
   RegistrationAction,
   RegistrationErrorAction,
-  RegistrationSuccessAction
+  RegistrationSuccessAction,
+  RetrieveAuthMethodsAction,
+  RetrieveAuthMethodsErrorAction,
+  RetrieveAuthMethodsSuccessAction,
+  GetJWTafterShibbLoginAction, StartShibbolethAuthenticationAction
 } from './auth.actions';
 import { EPerson } from '../eperson/models/eperson.model';
 import { AuthStatus } from './models/auth-status.model';
@@ -44,15 +48,31 @@ export class AuthEffects {
    */
   @Effect()
   public authenticate$: Observable<Action> = this.actions$.pipe(
-      ofType(AuthActionTypes.AUTHENTICATE),
-      switchMap((action: AuthenticateAction) => {
-        return this.authService.authenticate(action.payload.email, action.payload.password).pipe(
-          take(1),
-          map((response: AuthStatus) => new AuthenticationSuccessAction(response.token)),
-          catchError((error) => observableOf(new AuthenticationErrorAction(error)))
-        );
-      })
-    );
+    ofType(AuthActionTypes.AUTHENTICATE),
+    switchMap((action: AuthenticateAction) => {
+      return this.authService.authenticate(action.payload.email, action.payload.password).pipe(
+        take(1),
+        map((response: AuthStatus) => new AuthenticationSuccessAction(response.token)),
+        catchError((error) => observableOf(new AuthenticationErrorAction(error)))
+      );
+    })
+  );
+
+  /**
+   * Shib Login.
+   * @method shibLogin
+   */
+  @Effect()
+  public shibbLogin$: Observable<Action> = this.actions$.pipe(
+    ofType(AuthActionTypes.GET_JWT_AFTER_SHIBB_LOGIN),
+    switchMap((action: GetJWTafterShibbLoginAction) => {
+      return this.authService.startShibbAuth().pipe(
+        take(1),
+        map((response: AuthStatus) => new AuthenticationSuccessAction(response.token)),
+        catchError((error) => observableOf(new AuthenticationErrorAction(error)))
+      );
+    })
+  );
 
   /**
    * Shib Login.
@@ -104,6 +124,13 @@ export class AuthEffects {
         );
       })
     );
+
+  @Effect()
+  public checkTokenError$: Observable<Action> = this.actions$
+    .pipe(
+    ofType(AuthActionTypes.CHECK_AUTHENTICATION_TOKEN_ERROR),
+    map(() => new RetrieveAuthMethodsAction())
+    )
 
   @Effect()
   public createUser$: Observable<Action> = this.actions$.pipe(
@@ -185,6 +212,19 @@ export class AuthEffects {
       tap(() => this.authService.removeToken()),
       tap(() => this.authService.redirectToLoginWhenTokenExpired())
     );
+
+  @Effect()
+  public retrieveMethods$: Observable<Action> = this.actions$
+    .pipe(
+      ofType(AuthActionTypes.RETRIEVE_AUTH_METHODS),
+      switchMap(() => {
+      return this.authService.retrieveAuthMethods()
+        .pipe(
+          map((location: any) => new RetrieveAuthMethodsSuccessAction(location)),
+          catchError((error) => observableOf(new RetrieveAuthMethodsErrorAction()))
+        )
+    })
+    )
 
   /**
    * @constructor

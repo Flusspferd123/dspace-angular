@@ -10,6 +10,7 @@ import { AuthGetRequest, AuthPostRequest, GetRequest, PostRequest, RestRequest }
 import { AuthStatusResponse, ErrorResponse } from '../cache/response.models';
 import { HttpOptions } from '../dspace-rest-v2/dspace-rest-v2.service';
 import { getResponseFromEntry } from '../shared/operators';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class AuthRequestService {
@@ -18,7 +19,8 @@ export class AuthRequestService {
 
   constructor(@Inject(GLOBAL_CONFIG) protected EnvConfig: GlobalConfig,
               protected halService: HALEndpointService,
-              protected requestService: RequestService) {
+              protected requestService: RequestService,
+              private http: HttpClient) {
   }
 
   protected fetchRequest(request: RestRequest): Observable<any> {
@@ -50,6 +52,7 @@ export class AuthRequestService {
   }
 
   public getRequest(method: string, options?: HttpOptions): Observable<any> {
+    console.log('auth.request getRequest() was called');
     return this.halService.getEndpoint(this.linkName).pipe(
       filter((href: string) => isNotEmpty(href)),
       map((endpointURL) => this.getEndpointByMethod(endpointURL, method)),
@@ -59,4 +62,5 @@ export class AuthRequestService {
       mergeMap((request: GetRequest) => this.fetchRequest(request)),
       distinctUntilChanged());
   }
+
 }

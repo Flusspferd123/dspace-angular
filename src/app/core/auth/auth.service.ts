@@ -23,6 +23,9 @@ import { NativeWindowRef, NativeWindowService } from '../services/window.service
 import { Base64EncodeUrl } from '../../shared/utils/encode-decode.util';
 import { RemoteDataBuildService } from '../cache/builders/remote-data-build.service';
 import {RouteService} from '../services/route.service';
+import {GlobalConfig} from '../../../config/global-config.interface';
+import {GLOBAL_CONFIG} from '../../../config';
+import {AuthMethodModel} from './models/auth-method.model';
 
 export const LOGIN_ROUTE = '/login';
 export const LOGOUT_ROUTE = '/logout';
@@ -113,21 +116,13 @@ export class AuthService {
   }
 
   public startShibbAuth():  Observable<AuthStatus> {
-    console.log('startShibAuth() was called');
-    // Attempt authenticating the user after the shibboleth/saml response reached the backend
-    /*   const user = 'test@test.at';
-       const password = 'rest'
-       const body = (`password=${Base64EncodeUrl(password)}&user=${Base64EncodeUrl(user)}`);
-       const options: HttpOptions = Object.create({});*/
-    let headers = new HttpHeaders();
-    headers = headers.append('Content-Type', 'application/x-www-form-urlencoded');
-    // options.headers = headers;
+
     return this.authRequestService.postToEndpoint('login').pipe(
       map((status: AuthStatus) => {
         if (status.authenticated) {
           return status;
         } else {
-          throw(new Error('Invalid email or password'));
+          throw(new Error('Shibboleth login failed'));
         }
       }))
 
@@ -214,6 +209,22 @@ export class AuthService {
    */
   public resetAuthenticationError(): void {
     this.store.dispatch(new ResetAuthenticationMessagesAction());
+  }
+
+  /**
+   * Retrieve authentication methods available
+   * @returns {User}
+   */
+  public retrieveAuthMethods(): Observable<AuthMethodModel[]> {
+    return this.authRequestService.postToEndpoint('login', {}).pipe(
+      map((status: AuthStatus) => {
+        let authMethods: AuthMethodModel[];
+        if (isNotEmpty(status.authMethods)) {
+          authMethods = status.authMethods;
+        }
+        return authMethods;
+      })
+    )
   }
 
   /**
@@ -361,7 +372,6 @@ export class AuthService {
    * Redirect to the route navigated before the login
    */
   public redirectAfterLoginSuccess(isStandalonePage: boolean) {
-    console.log('redirectAfterLoginSuccess was triggered');
     this.getRedirectUrl().pipe(
       take(1))
       .subscribe((redirectUrl) => {
@@ -376,14 +386,15 @@ export class AuthService {
           this.routeService.getHistory().pipe(
             take(1)
           ).subscribe((history) => {
-            console.log('history in redirectAfterLoginSuccess(): ', history );
+            console.log('HISTORY: ', history);
             let redirUrl;
             if (isStandalonePage) {
               // For standalone login pages, use the previous route.
               redirUrl = history[history.length - 2] || '';
             } else {
-             // redirUrl = history[history.length - 1] || '';
-              redirectUrl = '/home'
+              console.log('isStandAlonePage: ', isStandalonePage);
+              console.log( 'history[history.length - 1; ', history[history.length - 1]);
+              redirUrl = history[history.length - 1] || '';
             }
             this.navigateToRedirectUrl(redirUrl);
           });

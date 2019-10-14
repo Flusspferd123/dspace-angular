@@ -11,8 +11,10 @@ import { LoginPageRoutingModule } from './login-page-routing.module';
     SharedModule,
   ],
   declarations: [
-    LoginPageComponent
-  ]
+    LoginPageComponent,
+
+  ],
+
 })
 export class LoginPageModule {
 

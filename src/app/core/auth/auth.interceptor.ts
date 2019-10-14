@@ -6,6 +6,7 @@ import {
   HttpErrorResponse,
   HttpEvent,
   HttpHandler,
+  HttpHeaders,
   HttpInterceptor,
   HttpRequest,
   HttpResponse,
@@ -17,10 +18,12 @@ import { AppState } from '../../app.reducer';
 import { AuthService } from './auth.service';
 import { AuthStatus } from './models/auth-status.model';
 import { AuthTokenInfo } from './models/auth-token-info.model';
-import { isNotEmpty, isUndefined, isNotNull } from '../../shared/empty.util';
+import { isNotEmpty, isNotNull, isUndefined } from '../../shared/empty.util';
 import { RedirectWhenTokenExpiredAction, RefreshTokenAction } from './auth.actions';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
+import { AuthMethodModel } from './models/auth-method.model';
+import { AuthMethodType } from '../../shared/log-in/methods/authMethods-type';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -30,7 +33,8 @@ export class AuthInterceptor implements HttpInterceptor {
   // we're creating a refresh token request list
   protected refreshTokenRequestUrls = [];
 
-  constructor(private inj: Injector, private router: Router, private store: Store<AppState>) { }
+  constructor(private inj: Injector, private router: Router, private store: Store<AppState>) {
+  }
 
   private isUnauthorized(response: HttpResponseBase): boolean {
     // invalid_token The access token provided is expired, revoked, malformed, or invalid for other reasons
@@ -49,17 +53,87 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private isLoginResponse(http: HttpRequest<any> | HttpResponseBase): boolean {
-    return http.url && http.url.endsWith('/authn/login');
+    return http.url && http.url.endsWith('/authn/login')
   }
 
   private isLogoutResponse(http: HttpRequest<any> | HttpResponseBase): boolean {
     return http.url && http.url.endsWith('/authn/logout');
   }
 
-  private makeAuthStatusObject(authenticated:boolean, accessToken?: string, error?: string): AuthStatus {
+  private parseLocation(unparsedLocation: string): string {
+    unparsedLocation = unparsedLocation.trim();
+    unparsedLocation = unparsedLocation.replace('location="', '');
+    unparsedLocation = unparsedLocation.replace('"', '');
+    let re = /%3A%2F%2F/g;
+    unparsedLocation = unparsedLocation.replace(re, '://');
+    re = /%3A/g
+    unparsedLocation = unparsedLocation.replace(re, ':')
+    const parsedLocation = unparsedLocation.trim(); // + '/shibboleth';
+
+    return parsedLocation;
+  }
+
+  private sortAuthMethods(authMethodModels: AuthMethodModel[]): AuthMethodModel[] {
+    const sortedAuthMethodModels: AuthMethodModel[] = new Array<AuthMethodModel>();
+    authMethodModels.forEach((method) => {
+      if (method.authMethodType === AuthMethodType.Password) {
+        sortedAuthMethodModels.push(method);
+      }
+    });
+
+    authMethodModels.forEach((method) => {
+      if (method.authMethodType !== AuthMethodType.Password) {
+        sortedAuthMethodModels.push(method);
+      }
+    });
+
+    return sortedAuthMethodModels;
+  }
+
+  private parseAuthMethodsfromHeaders(headers: HttpHeaders): AuthMethodModel[] {
+    let authMethodModels: AuthMethodModel[] = [];
+    const parts: string[] = headers.get('www-authenticate').split(',');
+    // get the realms from the header -  a realm is a single auth method
+    const completeWWWauthenticateHeader = headers.get('www-authenticate');
+    const regex = /(\w+ (\w+=((".*?")|[^,]*)(, )?)*)/g;
+    const realms = completeWWWauthenticateHeader.match(regex);
+
+    // tslint:disable-next-line:forin
+    for (const j in realms) {
+
+      const splittedRealm = realms[j].split(', ');
+      const methodName = splittedRealm[0].split(' ')[0].trim();
+
+      let authMethodModel: AuthMethodModel;
+      if (splittedRealm.length === 1) {
+        authMethodModel = new AuthMethodModel(methodName);
+        authMethodModels.push(authMethodModel);
+      } else if (splittedRealm.length > 1) {
+        let location = splittedRealm[1];
+        location = this.parseLocation(location);
+        authMethodModel = new AuthMethodModel(methodName, location);
+        // console.log('location: ', location);
+        authMethodModels.push(authMethodModel);
+      }
+    }
+
+    // make sure the email + password login component gets rendered first
+    authMethodModels = this.sortAuthMethods(authMethodModels);
+    return authMethodModels;
+  }
+
+  private makeAuthStatusObject(authenticated: boolean, accessToken ?: string, error ?: string, httpHeaders ?: HttpHeaders): AuthStatus {
     const authStatus = new AuthStatus();
+    // let authMethods: AuthMethodModel[];
+    if (httpHeaders) {
+      authStatus.authMethods = this.parseAuthMethodsfromHeaders(httpHeaders);
+    }
+
     authStatus.id = null;
+
     authStatus.okay = true;
+    // authStatus.authMethods = authMethods;
+
     if (authenticated) {
       authStatus.authenticated = true;
       authStatus.token = new AuthTokenInfo(accessToken);
@@ -103,14 +177,16 @@ export class AuthInterceptor implements HttpInterceptor {
       newReq = req;
     }
 
-    // Pass on the new request instead of the original request.
+// Pass on the new request instead of the original request.
     return next.handle(newReq).pipe(
+      // tap((response) => console.log('next.handle: ', response)),
       map((response) => {
         // Intercept a Login/Logout response
         if (response instanceof HttpResponse && this.isSuccess(response) && (this.isLoginResponse(response) || this.isLogoutResponse(response))) {
           // It's a success Login/Logout response
           let authRes: HttpResponse<any>;
           if (this.isLoginResponse(response)) {
+            console.log('auth.interceptor passes success login response from backend with token: ', response.headers.get('authorization'));
             // login successfully
             const newToken = response.headers.get('authorization');
             authRes = response.clone({body: this.makeAuthStatusObject(true, newToken)});
@@ -129,13 +205,15 @@ export class AuthInterceptor implements HttpInterceptor {
       catchError((error, caught) => {
         // Intercept an error response
         if (error instanceof HttpErrorResponse) {
+
           // Checks if is a response from a request to an authentication endpoint
           if (this.isAuthRequest(error)) {
             // clean eventually refresh Requests list
             this.refreshTokenRequestUrls = [];
+
             // Create a new HttpResponse and return it, so it can be handle properly by AuthService.
             const authResponse = new HttpResponse({
-              body: this.makeAuthStatusObject(false, null, error.error),
+              body: this.makeAuthStatusObject(false, null, error.error, error.headers),
               headers: error.headers,
               status: error.status,
               statusText: error.statusText,

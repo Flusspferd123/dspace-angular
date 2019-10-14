@@ -8,12 +8,13 @@ import {
   LogOutErrorAction,
   RedirectWhenAuthenticationIsRequiredAction,
   RedirectWhenTokenExpiredAction,
-  RefreshTokenSuccessAction,
+  RefreshTokenSuccessAction, RetrieveAuthMethodsSuccessAction,
   SetRedirectUrlAction
 } from './auth.actions';
 // import models
 import { EPerson } from '../eperson/models/eperson.model';
 import { AuthTokenInfo } from './models/auth-token-info.model';
+import { AuthMethodModel } from './models/auth-method.model';
 
 /**
  * The auth state.
@@ -47,6 +48,10 @@ export interface AuthState {
 
   // the authenticated user
   user?: EPerson;
+
+  // all authenticationMethods enabled at the backend
+  authMethods?: AuthMethodModel[];
+
 }
 
 /**
@@ -56,6 +61,7 @@ const initialState: AuthState = {
   authenticated: false,
   loaded: false,
   loading: false,
+  authMethods: new Array<AuthMethodModel>()
 };
 
 /**
@@ -68,6 +74,20 @@ export function authReducer(state: any = initialState, action: AuthActions): Aut
 
   switch (action.type) {
     case AuthActionTypes.AUTHENTICATE:
+      return Object.assign({}, state, {
+        error: undefined,
+        loading: true,
+        info: undefined
+      });
+
+    case AuthActionTypes.START_SHIBBOLETH_AUTHENTICATION:
+      return Object.assign({}, state, {
+        error: undefined,
+        loading: true,
+        info: undefined
+      });
+
+    case AuthActionTypes.GET_JWT_AFTER_SHIBB_LOGIN:
       return Object.assign({}, state, {
         error: undefined,
         loading: true,
@@ -196,6 +216,23 @@ export function authReducer(state: any = initialState, action: AuthActions): Aut
       return Object.assign({}, state, {
         error: undefined,
         info: undefined,
+      });
+
+    // next three cases are used by dynamic rendering of login methods
+    case AuthActionTypes.RETRIEVE_AUTH_METHODS:
+      return Object.assign({}, state, {
+        loading: true
+      });
+
+    case AuthActionTypes.RETRIEVE_AUTH_METHODS_SUCCESS:
+      return Object.assign({}, state, {
+        loading: false,
+        authMethods: (action as RetrieveAuthMethodsSuccessAction).payload
+      });
+
+    case AuthActionTypes.RETRIEVE_AUTH_METHODS_ERROR:
+      return Object.assign({}, state, {
+        loading: false
       });
 
     case AuthActionTypes.SET_REDIRECT_URL:

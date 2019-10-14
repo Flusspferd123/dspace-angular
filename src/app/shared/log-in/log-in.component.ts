@@ -1,62 +1,30 @@
-import { filter, map, takeWhile } from 'rxjs/operators';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { Component, Injector, Input, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
+import { AuthMethodModel } from '../../core/auth/models/auth-method.model';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import {
-  AuthenticateAction,
-  ResetAuthenticationMessagesAction
-} from '../../core/auth/auth.actions';
-
-import {
-  getAuthenticationError,
-  getAuthenticationInfo,
-  isAuthenticated,
-  isAuthenticationLoading,
-} from '../../core/auth/selectors';
+import { getAuthenticationMethods, isAuthenticated, isAuthenticationLoading } from '../../core/auth/selectors';
 import { CoreState } from '../../core/core.reducers';
-
-import { isNotEmpty } from '../empty.util';
-import { fadeOut } from '../animations/fade';
+import { InjectedAuthMethodModel } from './injectedAuthMethodModel/injectedAuthMethodModel';
+import { filter, takeWhile } from 'rxjs/operators';
 import { AuthService } from '../../core/auth/auth.service';
-import { Router } from '@angular/router';
 
-/**
- * /users/sign-in
- * @class LogInComponent
- */
 @Component({
   selector: 'ds-log-in',
   templateUrl: './log-in.component.html',
-  styleUrls: ['./log-in.component.scss'],
-  animations: [fadeOut]
+  styleUrls: ['./log-in.component.scss']
 })
-export class LogInComponent implements OnDestroy, OnInit {
-
+export class LogInComponent implements OnInit, OnDestroy {
   /**
-   * The error if authentication fails.
-   * @type {Observable<string>}
+   * The authentication methods data
+   * @type {AuthMethodModel[]}
    */
-  public error: Observable<string>;
+  @Input() authMethodData: Observable<AuthMethodModel[]>;
 
-  /**
-   * Has authentication error.
-   * @type {boolean}
-   */
-  public hasError = false;
+  private authMethods: AuthMethodModel[];
 
-  /**
-   * The authentication info message.
-   * @type {Observable<string>}
-   */
-  public message: Observable<string>;
+  public injectedAuthMethods: InjectedAuthMethodModel[];
 
-  /**
-   * Has authentication message.
-   * @type {boolean}
-   */
-  public hasMessage = false;
+  @Input() isStandalonePage: boolean;
 
   /**
    * Whether user is authenticated.
@@ -71,67 +39,33 @@ export class LogInComponent implements OnDestroy, OnInit {
   public loading: Observable<boolean>;
 
   /**
-   * The authentication form.
-   * @type {FormGroup}
-   */
-  public form: FormGroup;
-
-  /**
    * Component state.
    * @type {boolean}
    */
   private alive = true;
 
-  @Input() isStandalonePage: boolean;
+  private subscription: Subscription;
 
-  /**
-   * @constructor
-   * @param {AuthService} authService
-   * @param {FormBuilder} formBuilder
-   * @param {Router} router
-   * @param {Store<State>} store
-   */
-  constructor(
-    private authService: AuthService,
-    private formBuilder: FormBuilder,
-    private store: Store<CoreState>
-  ) {
+  constructor(private store: Store<CoreState>,
+              private authService: AuthService,) {
   }
 
-  /**
-   * Lifecycle hook that is called after data-bound properties of a directive are initialized.
-   * @method ngOnInit
-   */
-  public ngOnInit() {
-    // set isAuthenticated
-    this.isAuthenticated = this.store.pipe(select(isAuthenticated));
+  ngOnInit(): void {
+    this.authMethodData = this.store.pipe(select(getAuthenticationMethods));
 
-    // set formGroup
-    this.form = this.formBuilder.group({
-      email: ['', Validators.required],
-      password: ['', Validators.required]
-    });
-
-    // set error
-    this.error = this.store.pipe(select(
-      getAuthenticationError),
-      map((error) => {
-        this.hasError = (isNotEmpty(error));
-        return error;
-      })
-    );
-
-    // set error
-    this.message = this.store.pipe(
-      select(getAuthenticationInfo),
-      map((message) => {
-        this.hasMessage = (isNotEmpty(message));
-        return message;
-      })
-    );
+    this.subscription = this.authMethodData.subscribe((methods) => this.authMethods = methods);
+    this.injectedAuthMethods = new Array<InjectedAuthMethodModel>();
+    // tslint:disable-next-line:forin
+    for (const index in this.authMethods) {
+      const injectedAuthMethod = new InjectedAuthMethodModel(this.authMethods[index].authMethodType, this.authMethods[index].location, this.isStandalonePage);
+      this.injectedAuthMethods.push(injectedAuthMethod);
+    }
 
     // set loading
     this.loading = this.store.pipe(select(isAuthenticationLoading));
+
+    // set isAuthenticated
+    this.isAuthenticated = this.store.pipe(select(isAuthenticated));
 
     // subscribe to success
     this.store.pipe(
@@ -142,55 +76,12 @@ export class LogInComponent implements OnDestroy, OnInit {
           this.authService.redirectAfterLoginSuccess(this.isStandalonePage);
         }
       );
+
   }
 
-  /**
-   *  Lifecycle hook that is called when a directive, pipe or service is destroyed.
-   * @method ngOnDestroy
-   */
-  public ngOnDestroy() {
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
     this.alive = false;
-  }
-
-  /**
-   * Reset error or message.
-   */
-  public resetErrorOrMessage() {
-    if (this.hasError || this.hasMessage) {
-      this.store.dispatch(new ResetAuthenticationMessagesAction());
-      this.hasError = false;
-      this.hasMessage = false;
-    }
-  }
-
-  /**
-   * To the registration page.
-   * @method register
-   */
-  public register() {
-    // TODO enable after registration process is done
-    // this.router.navigate(['/register']);
-  }
-
-  /**
-   * Submit the authentication form.
-   * @method submit
-   */
-  public submit() {
-    this.resetErrorOrMessage();
-    // get email and password values
-    const email: string = this.form.get('email').value;
-    const password: string = this.form.get('password').value;
-
-    // trim values
-    email.trim();
-    password.trim();
-
-    // dispatch AuthenticationAction
-    this.store.dispatch(new AuthenticateAction(email, password));
-
-    // clear form
-    this.form.reset();
   }
 
 }

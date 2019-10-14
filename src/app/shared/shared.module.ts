@@ -47,7 +47,6 @@ import { SearchResultGridElementComponent } from './object-grid/search-result-gr
 import { ViewModeSwitchComponent } from './view-mode-switch/view-mode-switch.component';
 import { GridThumbnailComponent } from './object-grid/grid-thumbnail/grid-thumbnail.component';
 import { VarDirective } from './utils/var.directive';
-import { LogInComponent } from './log-in/log-in.component';
 import { AuthNavMenuComponent } from './auth-nav-menu/auth-nav-menu.component';
 import { LogOutComponent } from './log-out/log-out.component';
 import { FormComponent } from './form/form.component';
@@ -143,9 +142,12 @@ import { DsoInputSuggestionsComponent } from './input-suggestions/dso-input-sugg
 import { TypedItemSearchResultGridElementComponent } from './object-grid/item-grid-element/item-types/typed-item-search-result-grid-element.component';
 import { PublicationGridElementComponent } from './object-grid/item-grid-element/item-types/publication/publication-grid-element.component';
 import { ItemTypeBadgeComponent } from './object-list/item-type-badge/item-type-badge.component';
-import {GusContainerComponent} from './form/builder/ds-dynamic-form-ui/models/gus/gus.container.component';
-import {GusItemComponent} from './form/builder/ds-dynamic-form-ui/models/gus/gusItem/gus-item.component';
-import {GusAccordionComponent} from './form/builder/ds-dynamic-form-ui/models/gus/GusAccordion/gus-accordion.component';
+import {LogInShibbolethComponent} from './log-in/methods/shibboleth/log-in-shibboleth.component';
+// import {LogInComponent} from './log-in/log-in.component';
+import {LogInPasswordComponent} from './log-in/methods/password/log-in-password.component';
+import { LoginContainerComponent } from './log-in/container/login-container.component';
+import { LogInComponent } from './log-in/log-in.component';
+import { GusItemComponent } from './form/builder/ds-dynamic-form-ui/models/gus/gusItem/gus-item.component';
 import { PublicationTypeContainerComponent } from './form/builder/ds-dynamic-form-ui/models/publicationType/publication-type.container.component';
 import { PublicationTypePresentationComponent } from './form/builder/ds-dynamic-form-ui/models/publicationType/presentation/publication-type.presentation.component';
 
@@ -169,7 +171,7 @@ const MODULES = [
   NouisliderModule,
   MomentModule,
   TextMaskModule,
-  MenuModule,
+  MenuModule
 ];
 
 const ROOT_MODULES = [
@@ -273,6 +275,13 @@ const COMPONENTS = [
   TypedItemSearchResultGridElementComponent,
   ItemTypeSwitcherComponent,
   BrowseByComponent,
+  // LogInComponent,
+  LogInShibbolethComponent,
+  LogInPasswordComponent,
+  LoginContainerComponent,
+  LogInComponent,
+
+
   ItemTypeBadgeComponent,
   BrowseByComponent,
   GusItemComponent,
@@ -322,6 +331,9 @@ const ENTRY_COMPONENTS = [
   StartsWithTextComponent,
   PlainTextMetadataListElementComponent,
   ItemMetadataListElementComponent,
+  MetadataRepresentationListElementComponent,
+  LogInPasswordComponent,
+  LogInShibbolethComponent
   MetadataRepresentationListElementComponent,
   PublicationTypeContainerComponent
 ];
