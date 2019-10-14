@@ -3,7 +3,7 @@ import {
   AddAuthenticationMessageAction,
   AuthActions,
   AuthActionTypes,
-  AuthenticatedSuccessAction, AuthenticatedSuccessActionShibboleth,
+  AuthenticatedSuccessAction,
   AuthenticationErrorAction,
   LogOutErrorAction,
   RedirectWhenAuthenticationIsRequiredAction,
@@ -108,7 +108,7 @@ export function authReducer(state: any = initialState, action: AuthActions): Aut
         loading: false
       });
 
-    case AuthActionTypes.AUTHENTICATED_SUCCESS_SHIBBOLETH:
+/*    case AuthActionTypes.AUTHENTICATED_SUCCESS_SHIBBOLETH:
       console.log('case AUTHENTICATED_SUCCESS_SHIBBOLETH was triggered');
       return Object.assign({}, state, {
         authenticated: true,
@@ -117,7 +117,7 @@ export function authReducer(state: any = initialState, action: AuthActions): Aut
         error: undefined,
         loading: false,
         info: undefined,
-      });
+      });*/
 
     case AuthActionTypes.AUTHENTICATED_SUCCESS:
       return Object.assign({}, state, {

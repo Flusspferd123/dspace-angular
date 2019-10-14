@@ -391,10 +391,16 @@ export class AuthService {
             if (isStandalonePage) {
               // For standalone login pages, use the previous route.
               redirUrl = history[history.length - 2] || '';
+              if (redirUrl === '/shibboleth') {
+                redirUrl = '/home';
+              }
             } else {
               console.log('isStandAlonePage: ', isStandalonePage);
               console.log( 'history[history.length - 1; ', history[history.length - 1]);
               redirUrl = history[history.length - 1] || '';
+              if (redirUrl === '/shibboleth') {
+                redirUrl = '/home';
+              }
             }
             this.navigateToRedirectUrl(redirUrl);
           });
