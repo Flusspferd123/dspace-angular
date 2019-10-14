@@ -150,6 +150,8 @@ import { LogInComponent } from './log-in/log-in.component';
 import { GusItemComponent } from './form/builder/ds-dynamic-form-ui/models/gus/gusItem/gus-item.component';
 import { PublicationTypeContainerComponent } from './form/builder/ds-dynamic-form-ui/models/publicationType/publication-type.container.component';
 import { PublicationTypePresentationComponent } from './form/builder/ds-dynamic-form-ui/models/publicationType/presentation/publication-type.presentation.component';
+import { GusContainerComponent } from './form/builder/ds-dynamic-form-ui/models/gus/gus.container.component';
+import { GusAccordionComponent } from './form/builder/ds-dynamic-form-ui/models/gus/GusAccordion/gus-accordion.component';
 
 const MODULES = [
   // Do NOT include UniversalModule, HttpModule, or JsonpModule here
@@ -281,7 +283,6 @@ const COMPONENTS = [
   LoginContainerComponent,
   LogInComponent,
 
-
   ItemTypeBadgeComponent,
   BrowseByComponent,
   GusItemComponent,
@@ -333,7 +334,7 @@ const ENTRY_COMPONENTS = [
   ItemMetadataListElementComponent,
   MetadataRepresentationListElementComponent,
   LogInPasswordComponent,
-  LogInShibbolethComponent
+  LogInShibbolethComponent,
   MetadataRepresentationListElementComponent,
   PublicationTypeContainerComponent
 ];
