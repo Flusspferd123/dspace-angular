@@ -78,7 +78,6 @@ export class LogInPasswordComponent implements OnInit {
    */
   constructor(
     @Inject('authMethodModelProvider') public injectedAuthMethodModel: InjectedAuthMethodModel,
-   /* private authService: AuthService,*/
     private formBuilder: FormBuilder,
     private store: Store<CoreState>
   ) {
