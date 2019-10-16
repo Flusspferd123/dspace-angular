@@ -53,15 +53,14 @@ export class LogInComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.authMethodData = this.store.pipe(select(getAuthenticationMethods));
 
-    this.subscription = this.authMethodData.subscribe((methods) => {
-      this.authMethods = methods,
-        this.injectedAuthMethods = new Array<InjectedAuthMethodModel>();
-      // tslint:disable-next-line:forin
-      for (const index in this.authMethods) {
-        const injectedAuthMethod = new InjectedAuthMethodModel(this.authMethods[index].authMethodType, this.authMethods[index].location, this.isStandalonePage);
-        this.injectedAuthMethods.push(injectedAuthMethod);
-      }
-    });
+    this.subscription = this.authMethodData.subscribe((methods) => this.authMethods = methods);
+    this.injectedAuthMethods = new Array<InjectedAuthMethodModel>();
+    // tslint:disable-next-line:forin
+    for (const index in this.authMethods) {
+      const injectedAuthMethod = new InjectedAuthMethodModel(this.authMethods[index].authMethodType, this.authMethods[index].location, this.isStandalonePage);
+      this.injectedAuthMethods.push(injectedAuthMethod);
+    }
+    console.log('injectedAuthMethods in ngOnInit(): ', this.injectedAuthMethods);
 
     // set loading
     this.loading = this.store.pipe(select(isAuthenticationLoading));

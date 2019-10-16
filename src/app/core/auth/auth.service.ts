@@ -372,6 +372,7 @@ export class AuthService {
    * Redirect to the route navigated before the login
    */
   public redirectAfterLoginSuccess(isStandalonePage: boolean) {
+    console.log('isStandAlonePage: ', isStandalonePage);
     this.getRedirectUrl().pipe(
       take(1))
       .subscribe((redirectUrl) => {
@@ -395,7 +396,7 @@ export class AuthService {
                 redirUrl = '/home';
               }
             } else {
-              console.log('isStandAlonePage: ', isStandalonePage);
+              // console.log('isStandAlonePage: ', isStandalonePage);
               console.log( 'history[history.length - 1; ', history[history.length - 1]);
               redirUrl = history[history.length - 1] || '';
               if (redirUrl === '/shibboleth') {
